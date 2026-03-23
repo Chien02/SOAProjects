@@ -1,0 +1,175 @@
+package servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.client.ClientConfig;
+
+import customer.KhachHangDTO;
+
+@WebServlet("/CustomerWebClient")
+public class KhachHangWebClient extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	private final String CUSTOMER_URL = "http://localhost:8080/QuanLyTaiKhoan/rest";
+	private final String LOGIN = "dangNhap";
+	private final String REGISTER = "them";
+	private final String LOGOUT = "dangXuat";
+	private final String LIST = "danhSach";
+	private final String UPDATE = "capNhat";
+	private final String DROP = "xoa";
+	
+	ClientConfig config = new ClientConfig();
+       
+    public KhachHangWebClient() {
+        super();
+    }
+    
+    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	Client client = ClientBuilder.newClient(config);
+    	WebTarget target = client.target(CUSTOMER_URL).path(LOGIN);
+    	
+    	// Đóng gói
+    	KhachHangDTO dto = new KhachHangDTO();
+    	dto.setCccd(request.getParameter("cccd"));
+    	dto.setPassword(request.getParameter("password"));
+    	
+    	try {
+    		// Gọi api
+	    	Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(dto));
+	    	
+	    	// Xử lý kết quả
+	    	if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+	    		KhachHangDTO khachHang = apiResponse.readEntity(KhachHangDTO.class);
+	    		request.setAttribute("user", khachHang);
+	    		request.getSession().setAttribute("user", khachHang); // Lưu trong session
+	    		request.getRequestDispatcher("dashboard.jsp").forward(request,  response);
+	    	}
+	    	else {
+	    		String errorMsg = apiResponse.readEntity(String.class);
+	    		request.setAttribute("errorMsg", errorMsg);
+	    		request.getRequestDispatcher("index.jsp").forward(request, response);
+	    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	} finally {
+    		client.close();
+    	}
+    }
+    
+	private void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // Đóng gói
+		KhachHangDTO khachHang = new KhachHangDTO();
+		boolean laAdmin = (request.getParameter("laAdmin") == "true") ? true : false ;
+		khachHang.setCccd(request.getParameter("cccd"));
+		khachHang.setHoTen(request.getParameter("hoTen"));
+		khachHang.setDiaChi(request.getParameter("diaChi"));
+		khachHang.setLaAdmin(laAdmin);
+		khachHang.setPassword(request.getParameter("password"));
+		
+		// Gọi api
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(CUSTOMER_URL).path(REGISTER);
+		
+		Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(khachHang));
+		
+		// Xu ly
+		if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+			// Chuyển sang trang đăng nhập
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+		}
+		else {
+			String errorMsg = apiResponse.readEntity(String.class);
+    		request.setAttribute("errorMsg", errorMsg); 
+			request.getRequestDispatcher("register.jsp").forward(request, response);
+		}
+	}
+	
+	private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("user");
+		response.sendRedirect("index.jps");
+	}
+	
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Đóng gói
+		KhachHangDTO dto = new KhachHangDTO();
+		dto.setCccd(request.getParameter("cccd"));
+		dto.setDiaChi(request.getParameter("diaChi"));
+		dto.setHoTen(request.getParameter("hoTen"));
+		
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(CUSTOMER_URL).path(UPDATE);
+		
+		Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(dto));
+		
+		if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+			String successMsg = apiResponse.readEntity(String.class);
+			request.setAttribute("successMsg", successMsg);
+			request.getRequestDispatcher("userInfo.jsp").forward(request, response);
+		} else {
+			String errorMsg = apiResponse.readEntity(String.class);
+    		request.setAttribute("errorMsg", errorMsg);
+    		request.getRequestDispatcher("userInfo.jsp").forward(request, response);
+		}
+		client.close();
+	}
+	
+	private void getUserList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(CUSTOMER_URL).path(LIST);
+		
+		Response apiResponse = target.request().post(null);
+		
+		if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+			
+		}
+	}
+	
+	private void drop(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		
+		// Kiem tra action
+		switch (action) {
+		case LOGIN:
+			login(request, response);
+			break;
+		case REGISTER:
+			register(request, response);
+			break;
+		case LOGOUT:
+			logout(request, response);
+			break;
+		case UPDATE:
+			update(request, response);
+			break;
+		case DROP:
+			drop(request, response);
+			break;
+		case LIST:
+			getUserList(request, response);
+			break;
+		default:
+			// Quay về trang đăng nhập
+			response.sendRedirect("login.jsp");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}

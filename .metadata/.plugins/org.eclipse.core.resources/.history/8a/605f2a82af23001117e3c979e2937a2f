@@ -1,0 +1,27 @@
+package customer;
+
+public class CustomerDTO {
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	private String password;
+	private String confirmPassword;
+	private String passwordHash;
+	
+	public CustomerDTO() {
+		super();
+	}
+
+	public CustomerDTO(String cccd, String hoTen, String diaChi, String password, String confirmPassword,
+			String passwordHash) {
+		super();
+		this.cccd = cccd;
+		this.hoTen = hoTen;
+		this.diaChi = diaChi;
+		this.password = password;
+		this.confirmPassword = confirmPassword;
+		this.passwordHash = passwordHash;
+	}
+	
+	
+}

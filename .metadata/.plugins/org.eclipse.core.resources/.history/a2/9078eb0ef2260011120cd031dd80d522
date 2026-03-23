@@ -1,0 +1,85 @@
+package hanghoa;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+public class HangHoaImpl implements IHangHoa {
+	private static List<ChiTiet> danhSach = new ArrayList<ChiTiet>();
+	
+	static {
+		danhSach.add(new ChiTiet("SP01", "Bàn phím cơ không dây", "Logitech", 50, 1500000));
+		danhSach.add(new ChiTiet("SP02", "Chuột gaming siêu nhẹ", "Razer", 30, 800000));
+		danhSach.add(new ChiTiet("SP03", "Màn hình 24 inch IPS", "Dell", 20, 3500000));
+		danhSach.add(new ChiTiet("SP04", "Tai nghe chống ồn", "Sony", 15, 2200000));
+	}
+	
+	// Hàm dùng chung: Tìm kiếm hàng hóa theo Mã Số
+	private ChiTiet timHangHoaTheoMa(String maSo) {
+		for (ChiTiet ct : danhSach) {
+			if (maSo != null && maSo.equals(ct.getMaSo())) {
+				return ct;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Response themHangHoa(ChiTiet chiTiet) {
+		// Kiểm tra xem mã số đã tồn tại chưa
+		ChiTiet existing = timHangHoaTheoMa(chiTiet.getMaSo());
+		if (existing != null) {
+			return Response.status(Response.Status.CONFLICT).entity("Hàng hóa đã tồn tại (Trùng mã số)").build();
+		}
+		
+		// Thêm mới
+		danhSach.add(chiTiet);
+		return Response.ok("Thêm hàng hóa thành công").build();
+	}
+
+	@Override
+	public Response chinhSuaHangHoa(ChiTiet chiTiet) {
+		// Lấy mã số từ object truyền lên để tìm
+		ChiTiet existing = timHangHoaTheoMa(chiTiet.getMaSo());
+		
+		if (existing != null) {
+			// Cập nhật các trường dữ liệu
+			existing.setTen(chiTiet.getTen());
+			existing.setNsxuat(chiTiet.getNsxuat());
+			existing.setSoLuong(chiTiet.getSoLuong());
+			existing.setDonGia(chiTiet.getDonGia());
+			
+			return Response.ok("Cập nhật hàng hóa thành công").build();
+		}
+		
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy hàng hóa để cập nhật").build();
+	}
+
+	@Override
+	public Response xoaHangHoa(ChiTiet chiTiet) {
+		// Dù interface nhận vào 1 object ChiTiet, ta chỉ cần lấy mã số ra để xóa
+		ChiTiet existing = timHangHoaTheoMa(chiTiet.getMaSo());
+		
+		if (existing != null) {
+			danhSach.remove(existing);
+			return Response.ok("Xóa hàng hóa thành công").build();
+		}
+		
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy hàng hóa để xóa").build();
+	}
+
+	@Override
+	public Response xemChiTiet(String maSo) {
+		ChiTiet existing = timHangHoaTheoMa(maSo);
+		if (existing != null) {
+			return Response.ok(existing).build();
+		}
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy chi tiết hàng hóa này").build();
+	}
+
+	@Override
+	public Response getDanhSach() {
+		return Response.ok(danhSach).build();
+	}
+}

@@ -1,0 +1,168 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f9; /* (Tùy chọn) Thêm chút màu nền cho web bớt trống */
+}
+
+/* CĂN GIỮA DÒNG XIN CHÀO */
+h1 {
+    text-align: center; /* Lệnh này giúp chữ nằm ngay giữa trang */
+    margin: 0;
+    padding: 20px 0 40px 0;
+    color: #333;
+}
+
+/* ĐIỀU CHỈNH ĐỘ RỘNG BẢNG CHÍNH (MASTER TABLE) */
+.masterTable {
+    border-collapse: collapse;
+    width: 90%; /* Đổi thành 90% để bảng phình to ra theo màn hình */
+    max-width: 1400px; /* Chặn lại để màn hình to quá không bị loãng */
+    margin: 0 auto; /* Căn giữa bảng */
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* (Tùy chọn) Thêm bóng đổ cho bảng nổi bật */
+}
+
+/* CHIA TỶ LỆ 2 CỘT (Chỉ áp dụng cho Master Table, không làm vạ lây bảng con) */
+.masterTable > thead > tr > th:first-child {
+    width: 20%; /* Cột Menu bên trái thu gọn lại */
+}
+
+.masterTable > thead > tr > th:nth-child(2) {
+    width: 80%; /* Cột Nội dung bên phải phình to ra tối đa */
+}
+
+/* Trang trí các ô trong bảng chính */
+.masterTable > thead > tr > th, 
+.masterTable > tbody > tr > td {
+    border: 1px solid #ccc; /* Viền mỏng màu xám cho hiện đại */
+    padding: 15px;
+    text-align: center;
+    vertical-align: top; 
+}
+
+/* Làm nổi bật tiêu đề */
+.masterTable > thead > tr > th {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Xóa gạch chân cho các link ở Menu và thêm màu sắc */
+.masterTable > tbody > tr > td > a {
+    text-decoration: none;
+    color: #0056b3;
+    font-weight: bold;
+    display: block; /* Giúp click dễ hơn */
+}
+
+.masterTable > tbody > tr > td > a:hover {
+    color: #ff6600; /* Đổi màu khi di chuột qua link */
+}
+
+
+/* BẢNG THÔNG TIN CÁ NHÂN*/
+.functionTable {
+    width: 100%;
+    border: none;
+}
+.functionTable > tbody > tr > td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+.functionTable > tbody > tr > td:nth-child(2) {
+  text-align: right;
+}
+
+.functionTable > tbody > tr > td {
+    padding: 10px 5px;
+    border-bottom: 1px dashed #eee; /* Đường gạch ngang mờ phân cách các dòng */
+    width: 50%;
+}
+
+.merged-cell {
+    background-color: #ffffff;
+}
+
+/* =========================================
+   TRANG TRÍ BẢNG DANH SÁCH TÀI KHOẢN (DS-TABLE)
+   ========================================= */
+.ds-table th, .ds-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.ds-table th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Ép cột text phải nằm bên trái cho dễ đọc, cột tiền nằm bên phải */
+.ds-table td:not(.text-right) {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right !important;
+    font-weight: bold;
+    color: #28a74
+}
+
+/* =========================================
+   TRANG TRÍ FORM ĐĂNG NHẬP (LOGIN CARD)
+   ========================================= */
+.formDangNhap {
+    width: 500px; /* Dùng kích thước cố định thay vì 60% để tạo khối rõ ràng */
+    margin: 40px auto; /* Cách lề trên 40px, tự động căn giữa 2 bên */
+    padding: 30px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Bo tròn các góc */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng đổ 3D */
+}
+
+/* Ép các thẻ label nằm trên một dòng riêng và căn lề trái */
+.formDangNhap label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Mở rộng ô nhập liệu tràn viền và tạo khoảng cách thay cho thẻ <br> */
+.formDangNhap input[type="text"],
+.formDangNhap input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px; /* Khoảng cách giữa ô input và mục tiếp theo */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ngăn padding làm phình to ô input */
+    font-size: 16px;
+}
+
+/* Trang trí nút Đăng Nhập */
+.formDangNhap button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+.formDangNhap button:hover {
+    background-color: #ff6600; /* Đổi màu khi di chuột vào */
+}
+
+/* Dòng thông báo lỗi màu đỏ */
+.error-msg {
+    color: #dc3545;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,37 @@
+package taikhoan;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import customer.KhachHangDTO;
+
+public class KhachHangImpl implements IKhachHang {
+	private static List<KhachHangDTO> danhSachKH = new ArrayList<KhachHangDTO>();
+
+	@Override
+	public Response themKhachHang(KhachHangDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response xoaKhachHang(KhachHangDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response capNhatKhachHang(KhachHangDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response layDanhSachKH() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

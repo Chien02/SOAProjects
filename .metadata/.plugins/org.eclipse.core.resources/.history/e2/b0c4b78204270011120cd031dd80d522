@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/invoice/HoaDon.java=UTF-8
+encoding//src/invoice/HoaDonImpl.java=UTF-8
+encoding//src/invoice/HoaDonService.java=UTF-8
+encoding//src/invoice/IHoaDon.java=UTF-8

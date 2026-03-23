@@ -1,0 +1,9 @@
+h3, h4 {
+	width: 700px;
+	margin: 0 auto;
+}
+
+form {
+	width: 700px;
+	margin: 0 auto;
+}

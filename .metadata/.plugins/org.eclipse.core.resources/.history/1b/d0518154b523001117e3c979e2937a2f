@@ -1,0 +1,8 @@
+package hanghoa;
+
+public class ChiTiet extends HangHoa{
+	private int soLuong;
+	private double donGia;
+	
+	
+}

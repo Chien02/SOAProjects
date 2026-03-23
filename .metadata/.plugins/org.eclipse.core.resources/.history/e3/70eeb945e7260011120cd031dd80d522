@@ -1,0 +1,54 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ĐĂNG KÝ TÀI KHOẢN</title>
+	<link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+	<h2>ĐĂNG KÝ</h2>
+	
+	<form action="customer" method="POST" id="registerForm">
+		<p style="color: red;">${errorMsg}</p>
+		
+		<label for="cccd">CCCD</label>
+		<input type="text" name="cccd" required>
+		
+		<label for="hoTen">Họ và tên</label>
+		<input type="text" name="hoTen" required>
+		
+		<label for="diaChi">Địa chỉ</label>
+		<input type="text" name="diaChi" required>
+		
+		<input type="hidden" name="laAdmin" value="false">
+		
+		<label for="password">Mật khẩu</label>
+		<input type="password" name="password" id="password" required>
+		
+		<label for="confirmPassword">Xác nhận mật khẩu</label>
+		<input type="password" name="confirmPassword" id="confirmPassword" required>
+		
+		<p id="pwError" style="color: red; display: none; margin-top: -15px; margin-bottom: 15px; background: none; border: none; padding: 0;">Mật khẩu xác nhận không khớp!</p>
+		
+		<button type="submit" name="action" value="REGISTER">Đăng ký</button>
+		
+		<p>Đã có tài khoản? <a href="index.jsp">Đăng nhập ngay</a></p>
+	</form>
+
+	<script>
+		document.getElementById('registerForm').addEventListener('submit', function(event) {
+			const pass = document.getElementById('password').value;
+			const confirmPass = document.getElementById('confirmPassword').value;
+			const errorText = document.getElementById('pwError');
+			
+			if (pass !== confirmPass) {
+				event.preventDefault(); // Chặn form submit về server
+				errorText.style.display = 'block'; // Hiện cảnh báo
+			} else {
+				errorText.style.display = 'none';
+			}
+		});
+	</script>
+</body>
+</html>

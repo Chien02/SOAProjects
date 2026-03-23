@@ -1,0 +1,8 @@
+package taikhoan;
+
+public class Customer {
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	
+}

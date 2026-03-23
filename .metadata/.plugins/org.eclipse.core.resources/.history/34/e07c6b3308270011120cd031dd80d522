@@ -1,0 +1,79 @@
+package invoice;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.ws.rs.core.Response;
+import hanghoa.ChiTietDTO;
+
+public class HoaDonImpl implements IHoaDon {
+	
+	// Nơi lưu trữ tạm các hóa đơn trên Server
+	private static List<HoaDon> danhSachHoaDon = new ArrayList<>();
+
+	// Hàm hỗ trợ tìm kiếm nhanh
+	private HoaDon timHoaDonTheoMa(String maSo) {
+		for (HoaDon hd : danhSachHoaDon) {
+			if (maSo != null && maSo.equals(hd.getMaSo())) {
+				return hd;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Response taoHoaDon(HoaDon hoaDon) {
+		if (timHoaDonTheoMa(hoaDon.getMaSo()) != null) {
+			return Response.status(Response.Status.CONFLICT).entity("Hóa đơn đã tồn tại").build();
+		}
+		danhSachHoaDon.add(hoaDon);
+		return Response.ok("Tạo hóa đơn thành công").build();
+	}
+
+	@Override
+	public Response themVaoHoaDon(String maHoaDon, ChiTietDTO dto) {
+		HoaDon hd = timHoaDonTheoMa(maHoaDon);
+		if (hd != null) {
+			hd.them(dto); // Gọi hàm them() trong model HoaDon
+			return Response.ok("Thêm hàng vào hóa đơn thành công").build();
+		}
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy mã hóa đơn này").build();
+	}
+
+	@Override
+	public Response capNhatHoaDon(HoaDon hoaDon) {
+		HoaDon hd = timHoaDonTheoMa(hoaDon.getMaSo());
+		if (hd != null) {
+			hd.setTieuDe(hoaDon.getTieuDe());
+			hd.setMaKhachHang(hoaDon.getMaKhachHang());
+			hd.setDate(hoaDon.getDate());
+			return Response.ok("Cập nhật hóa đơn thành công").build();
+		}
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy hóa đơn để cập nhật").build();
+	}
+
+	@Override
+	public Response layHoaDon(String maSo) {
+		HoaDon hd = timHoaDonTheoMa(maSo);
+		if (hd != null) {
+			return Response.ok(hd).build();
+		}
+		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy hóa đơn").build();
+	}
+
+	@Override
+	public Response layDanhSach() {
+		return Response.ok(danhSachHoaDon).build();
+	}
+	
+	// Thêm hàm này vào class HoaDonImpl
+	@Override
+	public Response layDanhSachTheoKhachHang(String maKhachHang) {
+	    List<HoaDon> ketQua = new ArrayList<>();
+	    for (HoaDon hd : danhSachHoaDon) {
+	        if (maKhachHang != null && maKhachHang.equals(hd.getMaKhachHang())) {
+	            ketQua.add(hd);
+	        }
+	    }
+	    return Response.ok(ketQua).build();
+	}
+}

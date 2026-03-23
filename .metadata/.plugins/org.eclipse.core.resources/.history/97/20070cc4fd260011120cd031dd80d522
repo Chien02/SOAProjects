@@ -1,0 +1,48 @@
+package invoice;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import hanghoa.ChiTietDTO;
+
+public class HoaDonDTO implements Serializable{
+	private String hoaDonId;
+	private String userId;
+	private List<ChiTietDTO> danhSachChiTiet = new ArrayList<>();
+	private double totalPrice;
+	public HoaDonDTO(String hoaDonId, String userId, List<ChiTietDTO> dsChiTiet, double totalPrice) {
+		super();
+		this.hoaDonId = hoaDonId;
+		this.userId = userId;
+		this.danhSachChiTiet = dsChiTiet;
+		this.totalPrice = totalPrice;
+	}
+	public HoaDonDTO() {
+		super();
+	}
+	public String getHoaDonId() {
+		return hoaDonId;
+	}
+	public void setHoaDonId(String hoaDonId) {
+		this.hoaDonId = hoaDonId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public List<ChiTietDTO> getDsChiTiet() {
+		return dsChiTiet;
+	}
+	public void setDsChiTiet(List<ChiTietDTO> dsChiTiet) {
+		this.dsChiTiet = dsChiTiet;
+	}
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+}

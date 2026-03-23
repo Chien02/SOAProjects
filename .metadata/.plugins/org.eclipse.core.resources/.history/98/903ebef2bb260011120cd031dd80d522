@@ -1,0 +1,11 @@
+package invoice;
+
+import java.io.Serializable;
+
+public class HoaDonDTO implements Serializable{
+	private String maSo;
+	private String tieuDe;
+	private String nhanVien;
+	
+	
+}

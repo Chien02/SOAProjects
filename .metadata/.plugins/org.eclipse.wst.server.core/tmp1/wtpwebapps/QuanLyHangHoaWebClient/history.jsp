@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>LỊCH SỬ MUA HÀNG</title>
+	<link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+	<h2>QUẢN LÝ KHO HÀNG</h2>
+	<aside>
+		<a href="customer?action=khoHang">Trang chủ</a>
+		<a href="userInfo.jsp">Tài khoản</a>
+		
+		<c:if test="${khachHang != null && khachHang.laAdmin}">
+			<a href="hanghoa?action=inventory">Kho Hàng</a>
+		</c:if>
+		<c:if test="${khachHang != null && !khachHang.laAdmin}">
+			<a href="invoice?action=payment">Thanh toán</a>
+			<a href="lichSu?action=xemLichSu" class="active">Lịch sử mua hàng</a>
+		</c:if>
+		
+		<a href="customer?action=dangXuat">Đăng xuất</a>
+	</aside>
+	<main>
+		<div class="section-header">
+            <h2 class="section-title">Lịch Sử Mua Hàng Của Bạn</h2>
+        </div>
+        
+		<c:choose>
+            <c:when test="${not empty lichSuHoaDon}">
+                <c:forEach items="${lichSuHoaDon}" var="hd">
+                    
+                    <table class="cart-table" style="margin-bottom: 40px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <thead style="background-color: #2c3e50;">
+                            <tr>
+                                <th colspan="4" style="font-size: 15px; padding: 15px;">
+                                    MÃ ĐƠN: <span style="color: #f1c40f;">${hd.maSo}</span> 
+                                    <span style="float: right;">Ngày đặt: <fmt:formatDate value="${hd.date}" pattern="dd/MM/yyyy HH:mm" /></span>
+                                </th>
+                            </tr>
+                            <tr style="background-color: #34495e;">
+                                <th>Tên Sản Phẩm</th>
+                                <th style="text-align: right;">Đơn Giá</th>
+                                <th style="text-align: right;">Số Lượng</th>
+                                <th style="text-align: right;">Thành Tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:set var="tongTienDon" value="0" />
+                            
+                            <c:forEach items="${hd.danhSachChiTiet}" var="item">
+                                <tr>
+                                    <td><strong>${item.ten}</strong></td>
+                                    <td><fmt:formatNumber value="${item.donGia}" pattern="#,###" /> VNĐ</td>
+                                    <td>${item.soLuong}</td>
+                                    
+                                    <c:set var="thanhTienMon" value="${item.donGia * item.soLuong}" />
+                                    <td style="color: #e74c3c; font-weight: bold;"><fmt:formatNumber value="${thanhTienMon}" pattern="#,###" /> VNĐ</td>
+                                    
+                                    <c:set var="tongTienDon" value="${tongTienDon + thanhTienMon}" />
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-size: 16px; font-weight: bold; padding: 15px;">
+                                    TỔNG CỘNG HÓA ĐƠN NÀY:
+                                </td>
+                                <td style="font-size: 18px; font-weight: bold; color: #e74c3c; padding: 15px;">
+                                    <fmt:formatNumber value="${tongTienDon}" pattern="#,###" /> VNĐ
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </c:forEach>
+            </c:when>
+            
+            <c:otherwise>
+                <div class="empty-cart">
+                    <p>Bạn chưa có lịch sử mua hàng nào!</p>
+                    <a href="customer?action=khoHang" style="color: #3498db; text-decoration: none; font-weight: bold; margin-top: 10px; display: inline-block;">
+                        &larr; Khám phá kho hàng ngay
+                    </a>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+	</main>
+</body>
+</html>

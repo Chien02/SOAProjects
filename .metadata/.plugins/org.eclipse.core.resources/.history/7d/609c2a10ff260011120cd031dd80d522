@@ -1,0 +1,65 @@
+package invoice;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import hanghoa.ChiTietDTO;
+
+public class HoaDon {
+	private String maSo;
+	private String maKhachHang;
+	private String tieuDe;
+	private Date date;
+	private static List<ChiTietDTO> danhSachChiTiet = new ArrayList<ChiTietDTO>();
+	
+	public HoaDon(String maSo, String maKhachHang, String tieuDe, Date date) {
+		this.maSo = maSo;
+		this.maKhachHang = maKhachHang;
+		this.tieuDe = tieuDe;
+		this.date = date;
+	}
+	public HoaDon() {
+		super();
+	}
+	
+	// Thêm chiTiet vào hóa đơn
+	public boolean them(ChiTietDTO dto) {
+		// ChiTiet đã có rồi thì tăng số lượng lên
+		String maChiTiet = dto.getMaSo();
+		for (ChiTietDTO ct : danhSachChiTiet) {
+			if (maChiTiet.equals(ct.getMaSo())) {
+				ct.setSoLuong(ct.getSoLuong() + 1);
+				return true;
+			}
+		}
+		danhSachChiTiet.add(dto);
+		return true;
+	}
+	
+	// getter và setter
+	public String getMaSo() {
+		return maSo;
+	}
+	public void setMaSo(String maSo) {
+		this.maSo = maSo;
+	}
+	public String getTieuDe() {
+		return tieuDe;
+	}
+	public void setTieuDe(String tieuDe) {
+		this.tieuDe = tieuDe;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	public String getMaKhachHang() {
+		return maKhachHang;
+	}
+	public void setMaKhachHang(String maKhachHang) {
+		this.maKhachHang = maKhachHang;
+	}
+}

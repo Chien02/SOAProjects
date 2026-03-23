@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>KHO HANG HOA</title>
+	<link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+	<h2>TRANG CHỦ</h2>
+	<aside>
+		<a href="#">Trang chủ</a>
+		<a href="userInfo.jsp">Tài khoản</a>
+		<a href="invoice?action=payment">Thanh tóan</a>
+		<a href="customer?action=dangXuat">Đăng xuất</a>
+		<c:if test="${customer.laAdmin}">
+			<a href="hanghoa?action=inventory">Kho Hàng</a>
+		</c:if>
+	</aside>
+	<main>
+		<div class="section-header">
+            <h2 class="section-title">Hàng hóa</h2>
+            <span class="goods-count">Hiển thị ${goodsList.size()} kết quả</span> 
+        </div>
+
+		<div class="goods-grid">
+    		<c:forEach items="${goodsList}" var="dto">
+        		<div class="goods-card">
+            		<div class="goods-thumbnail" style="background-image: url('${dto.imageUrl}'); background-size: cover; background-position: center;"></div> 
+            			<div class="goods-info">
+                			<h3 class="goods-title">${dto.ten}</h3>
+                				<span class="goods-producer">${dto.nsxuat}</span>
+                				<span class="game-price">${dto.donGia}</span>
+                			<a href="hangHoa?action=chiTiet&maSo=${dto.maSo}" class="btn-rent">Chi tiết</a>
+            			</div>
+        		</div>
+    		</c:forEach>
+
+    	<c:if test="${empty goodsList}">
+        		<p style="color: white; text-align: center; width: 100%;">Không tìm thấy trò chơi nào.</p>
+    	</c:if>
+	</main>
+</body>
+</html>

@@ -1,0 +1,6 @@
+package taikhoan;
+
+public interface IAuthorization {
+	Response addUser(CustomerDTO dto);
+	Response del
+}

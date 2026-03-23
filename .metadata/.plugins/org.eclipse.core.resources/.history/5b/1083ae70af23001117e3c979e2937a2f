@@ -1,0 +1,10 @@
+package customer;
+
+public class CustomerDTO {
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	private String password;
+	private String confirmPassword;
+	private String passwordHash;
+}

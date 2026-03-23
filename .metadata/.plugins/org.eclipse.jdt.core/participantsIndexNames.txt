@@ -1,0 +1,13 @@
+INDEX VERSION 1.131
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1391752664.index
+\RentAGame\src
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3180679003.index
+\GameRentals\src
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\222838135.index
+\QuanLyHangHoaWebClient\src
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2122269060.index
+\BankAccountManagementProject\src
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2100095144.index
+\CalcWebClient\src
+D:\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3975598334.index
+\QLNHang\src

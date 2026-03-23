@@ -1,0 +1,39 @@
+package invoice;
+
+import javax.ws.rs.core.Response;
+
+import hanghoa.ChiTietDTO;
+
+public class HoaDonImpl implements IHoaDon {
+
+	@Override
+	public Response taoHoaDon(HoaDonDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response themVaoHoaDon(String maHoaDon, ChiTietDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response capNhatHoaDon(HoaDonDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response layHoaDon(String maSo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response layDanhSach() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

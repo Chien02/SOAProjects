@@ -1,0 +1,8 @@
+package invoice;
+
+public interface IHoaDon {
+	Response taoHoaDon();
+	Response themVaoHoaDon(ChiTietDTO dto);
+	Response layHoaDon(ChiTietDTO dto);
+	Response layDanhSach();
+}

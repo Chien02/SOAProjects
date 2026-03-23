@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Calculation Service</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<h3>CONG - TRU - NHAN - CHIA</h3>
+	<form action="CalcWebClient">
+		<label>a: </label> <input type="text" name="a" placeholder="${a}">
+		<label>b: </label> <input type="text" name="b" placeholder="${b}">
+		<label> = ${ketQua}</label><br/><br/>
+		<button type="submit" name="phepToan" value="cong">+</button>
+		<button type="submit" name="phepToan" value="tru">-</button>
+		<button type="submit" name="phepToan" value="nhan">*</button>
+		<button type="submit" name="phepToan" value="chia">/</button>
+	</form>
+	
+	<h3>GIAI THUA - LUY THUA - GIAI PHUONG TRINH BAC 2</h3>
+	<h4>Tinh giai thua: n!</h4>
+	<form action="CalcWebClient">
+		<label>n: </label> <input type="text" name="a" placeholder="${n}">
+		<button type="submit" name="phepToan" value="giaithua">=</button>
+		<p>${ketQuaGiaiThua}</p>
+	</form>
+	
+	<h4>Tinh luy thua: a^n</h4>
+	<form action="CalcWebClient">
+		<label>a: </label> <input type="text" name="a" placeholder="${n}">
+		<label>mu n: </label> <input type="text" name="n" placeholder="${n}">
+		<button type="submit" name="phepToan" value="luythua">=</button>
+		<p>${ketQuaLuyThua}</p>
+	</form>
+	
+	<h4>Giai phuong trinh bac 2: ax^2 + bx + c = 0</h4>
+	<form action="CalcWebClient">
+		<label>a: </label> <input type="text" name="a" placeholder="${aPTB2}">
+		<label>b: </label> <input type="text" name="b" placeholder="${bPTB2}">
+		<label>c: </label> <input type="text" name="c" placeholder="${cPTB2}">
+		<button  type="submit" name="phepToan" value="gpt2">=</button>
+		<p>${ketQuaGPT2}</p>
+	</form>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ĐĂNG KÝ</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<h2>ĐĂNG KÝ</h2>
+	<form action="customer" method="POST">
+		<label for="cccd">CCCD</label>
+		<input type="text" name="cccd"><br><br>
+		
+		<label for="username">Họ và tên</label>
+		<input type="text" name="username"><br><br>
+		
+		<label for="password">Mật khẩu</label>
+		<input type="password" name="password"><br><br>
+		
+		<label for="confirmPassword">Xác nhận mật khẩu</label>
+		<input type="password" name="confirmPassword"><br><br>
+		
+		<button type="submit" name="action" value="register">Đăng ký</button>
+	</form>
+</body>
+</html>

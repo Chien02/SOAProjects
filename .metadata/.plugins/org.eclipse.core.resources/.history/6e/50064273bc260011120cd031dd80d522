@@ -1,0 +1,13 @@
+package invoice;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HoaDonDTO implements Serializable{
+	private String hoaDonId;
+	private String userId;
+	private List<ChiTietDTO> dsChiTiet = new ArrayList<>();
+	
+	
+}

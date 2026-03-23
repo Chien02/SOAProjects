@@ -1,0 +1,83 @@
+package taikhoan;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import customer.KhachHangDTO;
+
+public class KhachHangImpl implements IKhachHang {
+	private static List<KhachHangDTO> danhSachKH = new ArrayList<KhachHangDTO>();
+	
+	static {
+		KhachHangDTO admin = new KhachHangDTO("1111", "Nguyen Van Chien", "Can Tho", "1111", true);
+		KhachHangDTO user1 = new KhachHangDTO("2222", "Nguyen Van A", "Thot Not", "1111", true);
+		KhachHangDTO user2 = new KhachHangDTO("3333", "Nguyen Van C", "Cai Rang", "1111", true);
+		KhachHangDTO user3 = new KhachHangDTO("4444", "Nguyen Van D", "Ninh Kieu", "1111", true);
+		
+		danhSachKH.add(admin);
+		danhSachKH.add(user1);
+		danhSachKH.add(user2);
+		danhSachKH.add(user3);
+	}
+	
+	private KhachHangDTO timKhachHangTheoCCCD(String cccd) {
+		for (KhachHangDTO kh : danhSachKH) {
+			if (cccd.equals(kh.getCccd())) {
+				return kh;
+			}
+		}
+		return null;
+	}
+	
+	private KhachHangDTO timKhachHang(String id) {
+		for (KhachHangDTO kh : danhSachKH) {
+			if (id.equals(kh.getKhachHangId())) {
+				return kh;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Response themKhachHang(KhachHangDTO dto) {
+		// Kiem tra khach nay co ton tai chua
+		KhachHangDTO khachHang = timKhachHangTheoCCCD(dto.getCccd());
+		if (khachHang != null) return Response.status(Response.Status.UNAUTHORIZED).entity("Khach hang da ton tai").build(); 
+		// Thêm khách hàng
+		KhachHangDTO newKhachHang = new KhachHangDTO(dto);
+		danhSachKH.add(newKhachHang);
+		return Response.ok("Thêm khách hàng thành công").build();
+	}
+
+	@Override
+	public Response xoaKhachHang(KhachHangDTO dto) {
+		String khachHangID = dto.getKhachHangId();
+		int index = -1;
+		
+		for (int i=0; i<danhSachKH.size(); i++) {
+			if (khachHangID.equals(danhSachKH.get(i).getKhachHangId())) {
+				// Đánh dấu tài khoản cần xóa
+				index = i;
+			}
+		}
+		if (index != -1) {
+			danhSachKH.remove(index);
+			return Response.ok("Xóa tài khoản thành công").build();
+		}
+		return Response.status(Response.Status.UNAUTHORIZED).entity("Khach hang da ton tai").build();
+	}
+
+	@Override
+	public Response capNhatKhachHang(KhachHangDTO dto) {
+		
+	}
+
+	@Override
+	public Response layDanhSachKH() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

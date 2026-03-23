@@ -1,0 +1,50 @@
+package hanghoa;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+
+@Path("/hanghoa")
+public class HangHoaService implements IHangHoa {
+	private static HangHoaImpl hangHoaimpl = new HangHoaImpl();
+
+	@Override
+	@POST
+	@Path("/themHangHoa")
+	public Response themHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@POST
+	@Path("/capNhatHangHoa")
+	public Response chinhSuaHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@POST
+	@Path("/xoaHangHoa")
+	public Response xoaHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@POST
+	@Path("/chiTiet")
+	public Response xemChiTiet(String maSo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@POST
+	@Path("/danhSach")
+	public Response getDanhSach() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

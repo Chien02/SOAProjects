@@ -1,0 +1,58 @@
+package taikhoan;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import customer.KhachHangDTO;
+
+public class KhachHangImpl implements IKhachHang {
+	private static List<KhachHangDTO> danhSachKH = new ArrayList<KhachHangDTO>();
+	
+	static {
+		KhachHangDTO admin = new KhachHangDTO("1111", "Nguyen Van Chien", "Can Tho", "1111", true);
+		KhachHangDTO user1 = new KhachHangDTO("2222", "Nguyen Van A", "Thot Not", "1111", true);
+		KhachHangDTO user2 = new KhachHangDTO("3333", "Nguyen Van C", "Cai Rang", "1111", true);
+		KhachHangDTO user3 = new KhachHangDTO("4444", "Nguyen Van D", "Ninh Kieu", "1111", true);
+		
+		danhSachKH.add(admin);
+		danhSachKH.add(user1);
+		danhSachKH.add(user2);
+		danhSachKH.add(user3);
+	}
+
+	@Override
+	public Response themKhachHang(KhachHangDTO dto) {
+		// Kiem tra khach nay co ton tai chua
+		String newCCCD = dto.getCccd();
+		for (KhachHangDTO kh : danhSachKH) {
+			if (newCCCD.equals(kh.getCccd())) {
+				return Response.status(Response.Status.UNAUTHORIZED).entity("Khach hang da ton tai").build();
+			}
+		}
+		
+		// Thêm khách hàng
+		danhSachKH.add(dto);
+		return null;
+	}
+
+	@Override
+	public Response xoaKhachHang(KhachHangDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response capNhatKhachHang(KhachHangDTO dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response layDanhSachKH() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

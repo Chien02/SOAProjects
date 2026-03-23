@@ -1,0 +1,491 @@
+package client;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
+import org.glassfish.jersey.client.ClientConfig;
+
+import qlnh.GiaoDichRequest;
+import qlnh.TaiKhoanNganHang;
+
+/**
+ * Servlet implementation class QLNHangWebClient
+ */
+@WebServlet("/QLNHangWebClient")
+public class QLNHangWebClient extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static final URI uri = UriBuilder.fromUri("http://localhost:8080/QLNHang/rest/nganhang").build();
+	private static final String API_URL = "http://localhost:8080/QLNHang/rest/nganhang";
+	
+	ClientConfig config = new ClientConfig();
+	Client client = ClientBuilder.newClient(config);
+	
+	WebTarget target = client.target(uri);
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public QLNHangWebClient() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+    
+    private void kiemTraThongBaoSession(javax.servlet.http.HttpSession session, HttpServletRequest request) {
+    	// Kiem tra lai thong bao trong session
+		String thongBaoLoi = (String) session.getAttribute("thongBaoLoi");
+		String thongBaoThanhCong = (String) session.getAttribute("thongBaoThanhCong");
+		
+		if (thongBaoLoi != null) {
+			request.setAttribute("thongBaoLoi", thongBaoLoi);
+			session.removeAttribute("thongBaoLoi");
+		}
+		
+		if (thongBaoThanhCong!= null) {
+			request.setAttribute("thongBaoThanhCong", thongBaoThanhCong);
+			session.removeAttribute("thongBaoThanhCong");
+		}
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Kiem tra session
+		javax.servlet.http.HttpSession session = request.getSession();
+		qlnh.TaiKhoanNganHang taiKhoan = (qlnh.TaiKhoanNganHang) session.getAttribute("taiKhoan");
+		
+		String action = request.getParameter("action");
+		
+		if (taiKhoan == null) {
+			request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+			return;
+		}
+		
+		if (action == null) {
+			action = "thongtin";
+		}
+		
+		switch (action) {
+			case "thongtin":
+				request.getRequestDispatcher("/WEB-INF/thongTin.jsp").forward(request, response);
+				break;
+			case "naptien":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				
+				request.getRequestDispatcher("/WEB-INF/napTien.jsp").forward(request, response);
+				break;
+			case "ruttien":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				
+				request.getRequestDispatcher("/WEB-INF/rutTien.jsp").forward(request, response);
+				break;
+			case "chuyentien":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				
+				request.getRequestDispatcher("/WEB-INF/chuyenTien.jsp").forward(request, response);
+				break;
+			case "danhsach":
+				danhSach(request, response);
+//				request.getRequestDispatcher("/WEB-INF/danhSach.jsp").forward(request, response);
+				break;
+			case "themtaikhoan":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				themTaiKhoan(request, response);
+				break;
+			case "dangxuat":
+				session.invalidate();
+				response.sendRedirect("QLNHangWebClient");
+				break;
+			default:
+				request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+				break;
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		
+		if (action == null) {
+			request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+			return;
+		}
+		javax.servlet.http.HttpSession session = request.getSession();
+		
+		switch (action) {
+			case "dangnhap":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				dangNhap(request, response);
+				break;
+			case "thongtin":
+				request.getRequestDispatcher("/WEB-INF/thongTin.jsp").forward(request, response);
+				break;
+			case "naptien":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				napTien(request, response);
+				break;
+			case "ruttien":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				rutTien(request, response);
+				break;
+			case "chuyentien":
+				chuyenTien(request, response);
+				break;
+			case "danhsach":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				danhSach(request, response);
+				break;
+			case "themtaikhoan":
+				// Kiem tra lai thong bao trong session
+				kiemTraThongBaoSession(session, request);
+				themTaiKhoan(request, response);
+				break;
+			case "timtaikhoan":
+				kiemTraThongBaoSession(session, request);
+				timTaiKhoan(request, response);
+			default:
+				// Chuyen ve trang dang nhap
+				request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+				break;
+		}
+	}
+	
+	protected void dangNhap(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Nhan du lieu gui ve server
+		String soTK = request.getParameter("soTK");
+		String maPin = request.getParameter("maPin");
+		
+		// Dong goi du lieu
+		GiaoDichRequest reqBody = new GiaoDichRequest();
+		reqBody.setSoTaiKhoanNhan(soTK);
+		reqBody.setMaPin(maPin);
+		
+		// Khoi tao client de phong nhieu client cung truy cap cung luc
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("dangnhap");
+		
+		try {
+			// Gui request di kem theo body
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(reqBody));
+			
+			
+			// Xu ly api
+			if (apiResponse.getStatus() == 200) { // 200 = ok
+				qlnh.TaiKhoanNganHang taiKhoan = apiResponse.readEntity(qlnh.TaiKhoanNganHang.class);
+				javax.servlet.http.HttpSession session = request.getSession();
+				session.setAttribute("taiKhoan", taiKhoan);
+				session.setAttribute("maPin", reqBody.getMaPin());
+				request.getRequestDispatcher("/WEB-INF/thongTin.jsp").forward(request, response);
+			}
+			else {
+				// Dang nhap that bai
+				String errorMsg = apiResponse.readEntity(String.class);
+				request.setAttribute("thongBaoLoi", errorMsg);
+				request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			request.setAttribute("thongBaoLoi", "Loi ket noi den may chu");
+			request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+		}
+		finally {
+			client.close();
+		}
+		
+	}
+	
+	protected void napTien(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+		// Tao client va duong dan api
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("naptien");
+		
+		// Xu ly
+		try {
+			javax.servlet.http.HttpSession session = request.getSession();
+			qlnh.TaiKhoanNganHang taiKhoan = (qlnh.TaiKhoanNganHang) session.getAttribute("taiKhoan");
+			
+			if (taiKhoan == null) {
+				request.setAttribute("thongBaoLoi", "MAT KET NOI");
+				response.sendRedirect("QLNHangWebClient");
+				return;
+			}
+			
+			String soTK = taiKhoan.getSoTaiKhoan();
+			String maPin = request.getParameter("maPin");
+			Double soTien = Double.parseDouble(request.getParameter("soTien"));
+			
+			// Dong goi request
+			GiaoDichRequest reqBody = new GiaoDichRequest();
+			reqBody.setSoTaiKhoan(taiKhoan.getSoTaiKhoan());
+			reqBody.setMaPin(maPin);
+			reqBody.setSoTien(soTien);
+			
+			// Gui request den server
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(reqBody));
+			
+			// Xu ly api nha ve tu server
+			if (apiResponse.getStatus() == 200) {
+				// Nap tien thanh cong, cap nhat lai tai khoan len session
+				qlnh.TaiKhoanNganHang taiKhoanMoi = apiResponse.readEntity(qlnh.TaiKhoanNganHang.class);
+				session.setAttribute("taiKhoan", taiKhoanMoi);
+				session.setAttribute("thongBaoThanhCong", "NAP TIEN THANH CONG");
+				response.sendRedirect("QLNHangWebClient?action=naptien");
+			}
+			else {
+				session.setAttribute("thongBaoLoi", "NAP TIEN KHONG THANH CONG");
+				response.sendRedirect("QLNHangWebClient?action=naptien");
+			}
+		} catch (Exception e) {
+			response.sendRedirect("QLNHangWebClient");
+		}
+	}
+
+	protected void rutTien(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Tao client
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("ruttien");
+		
+		// Xu ly api
+		try {
+			// Kiem tra session
+			javax.servlet.http.HttpSession session = request.getSession();
+			qlnh.TaiKhoanNganHang taiKhoan = (qlnh.TaiKhoanNganHang) session.getAttribute("taiKhoan");
+			
+			if (taiKhoan == null) {
+				request.setAttribute("thongBaoLoi", "MAT KET NOI");
+				response.sendRedirect("QLNHangWebClient");
+				return;
+			}
+			
+			// Nhan request gui tu client
+			String maPin = request.getParameter("maPin");
+			Double soTien = Double.parseDouble(request.getParameter("soTien"));
+			
+			// Dong goi request
+			GiaoDichRequest reqBody = new GiaoDichRequest();
+			reqBody.setMaPin(maPin);
+			reqBody.setSoTien(soTien);
+			reqBody.setSoTaiKhoan(taiKhoan.getSoTaiKhoan());
+			
+			// Nhan api response
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(reqBody));
+			
+			// api thanh cong
+			if (apiResponse.getStatus() == 200) {
+				// Cap nhat tai khoan
+				qlnh.TaiKhoanNganHang taiKhoanMoi = apiResponse.readEntity(qlnh.TaiKhoanNganHang.class);
+				session.setAttribute("taiKhoan", taiKhoanMoi);
+				
+				session.setAttribute("thongBaoThanhCong", "RUT TIEN THANH CONG");
+				response.sendRedirect("QLNHangWebClient?action=ruttien");
+			}
+			else {
+				session.setAttribute("thongBaoLoi", "RUT TIEN THAT BAI");
+				response.sendRedirect("QLNHangWebClient?action=ruttien");
+			}
+		} catch (Exception e) {
+			
+			return;
+		} finally {
+			client.close();
+		}
+	}
+	
+	protected void chuyenTien(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Tao client
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("chuyentien");
+		
+		try {
+			// Kiem tra session
+			javax.servlet.http.HttpSession session = request.getSession();
+			qlnh.TaiKhoanNganHang taiKhoan = (qlnh.TaiKhoanNganHang) session.getAttribute("taiKhoan");
+			
+			if (taiKhoan == null) {
+				response.sendRedirect("QLNHangWebClient");
+				return;
+			}
+			
+			// Nhan request và dong goi request de gui den server
+			String maPin = request.getParameter("maPin");
+			String soTK = taiKhoan.getSoTaiKhoan();
+			String soTKNhan = request.getParameter("soTKNhan");
+			Double soTien = Double.parseDouble(request.getParameter("soTien"));
+			
+			GiaoDichRequest reqBody = new GiaoDichRequest();
+			reqBody.setMaPin(maPin);
+			reqBody.setSoTaiKhoanNhan(soTKNhan);
+			reqBody.setSoTaiKhoan(soTK);
+			reqBody.setSoTien(soTien);
+			
+			// Gui request
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(reqBody));
+			
+			// Xu ly api
+			if (apiResponse.getStatus() == 200) {
+				session.setAttribute("thongBaoThanhCong", "CHUYEN TIEN THANH CONG DEN TAI KHOAN " + soTKNhan);
+				
+				// Cap nhat tai khoan goc
+				qlnh.TaiKhoanNganHang taiKhoanMoi = apiResponse.readEntity(qlnh.TaiKhoanNganHang.class);
+				session.setAttribute("taiKhoan", taiKhoanMoi);
+				
+				response.sendRedirect("QLNHangWebClient?action=chuyentien");;
+			}
+			else {
+				String errorMsg = apiResponse.readEntity(String.class);
+				session.setAttribute("thongBaoLoi", errorMsg);
+				response.sendRedirect("QLNHangWebClient?action=chuyentien");
+				return;
+			}
+		} catch (Exception e) {
+			response.sendRedirect("QLNHangWebClient");
+			return;
+		} finally {
+			client.close();
+		}
+	}
+	
+	protected void danhSach(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("danhsach");
+		
+		try {
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).get();
+			if (apiResponse.getStatus() == 200) {
+				List<qlnh.TaiKhoanNganHang> danhSachTK = apiResponse.readEntity(new GenericType<List<qlnh.TaiKhoanNganHang>>() {});
+				
+				System.out.println("CLIENT DEBUG - Nhan duoc danh sach size: " + (danhSachTK != null ? danhSachTK.size() : "NULL"));
+				
+				request.setAttribute("danhSachTK", danhSachTK);
+				request.getRequestDispatcher("/WEB-INF/danhSach.jsp").forward(request, response);
+			}
+			else {
+				request.getSession().setAttribute("thongBaoLoi", "Loi hien thi");
+				response.sendRedirect("QLNHangWebClient");
+			}
+		} catch(Exception e) {
+			// Tro ve trang dang nhap
+			request.setAttribute("thongBaoLoi", "Loi ket noi");
+			response.sendRedirect("QLNHangWebClient");
+			return;
+		} finally {
+			client.close();
+		}
+	}
+
+	protected void themTaiKhoan(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Khai báo session đúng 1 lần ở đầu hàm để dùng chung cho mọi nơi
+		javax.servlet.http.HttpSession session = request.getSession();
+		
+		// Lấy số tài khoản
+		String soTK = request.getParameter("soTK");
+		
+		if (soTK == null) {
+			// Lấy câu thông báo thành công từ chức năng POST (nếu có)
+			String tbThanhCong = (String) session.getAttribute("thongBaoThanhCong");
+			if (tbThanhCong != null) {
+				request.setAttribute("thongBaoThanhCong", tbThanhCong);
+				session.removeAttribute("thongBaoThanhCong");
+			}
+			
+			// Hiển thị giao diện form
+			request.getRequestDispatcher("/WEB-INF/themTaiKhoan.jsp").forward(request, response);
+			return; // Bắt buộc phải return để dừng hàm
+		}
+		
+		String chuTK = request.getParameter("chuTK");
+		String maPin = request.getParameter("maPin");
+		String maPinRepeat = request.getParameter("maPinRepeat");
+		
+		// Đọc giá trị checkbox laAdmin
+		String laAdminStr = request.getParameter("laAdmin");
+		boolean laAdmin = (laAdminStr != null && laAdminStr.equals("true"));
+		
+		// Kiểm tra mã PIN nhập lại
+		if (!maPin.equals(maPinRepeat)) {
+			request.setAttribute("thongBaoSaiMaPin", "Mã PIN nhập lại không khớp!");
+			request.getRequestDispatcher("/WEB-INF/themTaiKhoan.jsp").forward(request, response);
+			return;
+		}
+		
+		// Đóng gói request
+		GiaoDichRequest reqBody = new GiaoDichRequest();
+		reqBody.setSoTaiKhoan(soTK);
+		reqBody.setChuTaiKhoan(chuTK);
+		reqBody.setMaPin(maPin);
+		reqBody.setLaAdmin(laAdmin);
+		
+		// Chuẩn bị kết nối API
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_URL).path("themtaikhoan");
+		
+		try {
+			// Gửi dữ liệu đi
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(reqBody));
+			
+			// xu ly
+			if (apiResponse.getStatus() == 201) {
+				// Cất thông báo thành công vào Session
+				session.setAttribute("thongBaoThanhCong", "Tạo thành công tài khoản: " + soTK);
+				// Ép trình duyệt tải lại trang form trống (PRG Pattern)
+				response.sendRedirect("QLNHangWebClient?action=themtaikhoan");
+			} else {
+				// Thất bại (Mã 409 CONFLICT - Đã tồn tại)
+				String errorMsg = apiResponse.readEntity(String.class);
+				request.setAttribute("thongBaoLoi", errorMsg);
+				request.getRequestDispatcher("/WEB-INF/themTaiKhoan.jsp").forward(request, response);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			request.setAttribute("thongBaoLoi", "Lỗi mất kết nối với máy chủ API");
+			request.getRequestDispatcher("/WEB-INF/themTaiKhoan.jsp").forward(request, response);
+		} finally {
+			client.close();
+		}
+	}
+	
+	protected void timTaiKhoan(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		javax.servlet.http.HttpSession session = request.getSession();
+		String soTK = request.getParameter("soTK");
+		
+		if (soTK == null) {
+			// Lấy câu thông báo thành công từ chức năng POST (nếu có)
+			String tbThanhCong = (String) session.getAttribute("thongBaoThanhCong");
+			if (tbThanhCong != null) {
+				request.setAttribute("thongBaoThanhCong", tbThanhCong);
+				session.removeAttribute("thongBaoThanhCong");
+			}
+			
+			// Hiển thị giao diện form
+			request.getRequestDispatcher("/WEB-INF/timTaiKhoan.jsp").forward(request, response);
+			return;
+		}
+		
+		// Xu ly
+		
+	}
+}

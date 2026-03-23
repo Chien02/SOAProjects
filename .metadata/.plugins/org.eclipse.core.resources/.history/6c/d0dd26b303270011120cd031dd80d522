@@ -1,0 +1,162 @@
+package servlet;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import customer.KhachHangDTO;
+import hanghoa.ChiTiet;
+import hanghoa.ChiTietDTO;
+import invoice.HoaDonDTO;
+
+@WebServlet("/invoice")
+public class HoaDonWebClient extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	// Đảm bảo HOADON_URL và HANGHOA_URL khớp với cấu hình project của bạn
+	private final String HOADON_URL = "http://localhost:8080/QuanLyHangHoa/rest/hoaDon";
+	private final String HANGHOA_URL = "http://localhost:8080/QuanLyHangHoa/rest/hangHoa";
+	
+	private final String ADD_TO_CART = "themVaoGio";
+	private final String VIEW_CART = "payment";
+	private final String CHECKOUT = "thanhToan";
+
+    public HoaDonWebClient() {
+        super();
+    }
+
+	// 1. CHỨC NĂNG THÊM VÀO GIỎ HÀNG (LƯU TẠM TRONG SESSION)
+	private void themVaoGio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		KhachHangDTO user = (KhachHangDTO) session.getAttribute("khachHang");
+
+		// Nếu người dùng chưa đăng nhập, đá về trang chủ
+		if (user == null) {
+			response.sendRedirect("index.jsp");
+			return;
+		}
+
+		String maSo = request.getParameter("maSo");
+		int soLuong = Integer.parseInt(request.getParameter("soLuong"));
+
+		Client client = null;
+		try {
+			// A. Gọi API Hàng Hóa để lấy thông tin chi tiết (tên, giá) của sản phẩm được chọn
+			client = ClientBuilder.newClient();
+			WebTarget target = client.target(HANGHOA_URL).path("chiTiet").path(maSo);
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).get();
+
+			if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+				ChiTiet hangHoa = apiResponse.readEntity(ChiTiet.class);
+
+				// Chuyển dữ liệu sang ChiTietDTO để nhét vào giỏ
+				ChiTietDTO dto = new ChiTietDTO();
+				dto.setMaSo(hangHoa.getMaSo());
+				dto.setTen(hangHoa.getTen());
+				dto.setNsxuat(hangHoa.getNsxuat());
+				dto.setDonGia(hangHoa.getDonGia());
+				dto.setSoLuong(soLuong);
+
+				// B. Lấy giỏ hàng từ Session. Nếu chưa có thì tạo giỏ hàng mới tinh!
+				HoaDonDTO gioHang = (HoaDonDTO) session.getAttribute("gioHang");
+				if (gioHang == null) {
+					String maHD = "HD" + System.currentTimeMillis(); // Tạo mã hóa đơn ngẫu nhiên theo thời gian
+					gioHang = new HoaDonDTO(maHD, user.getCccd(), "Đơn hàng của " + user.getHoTen(), new Date(), null);
+				}
+
+				// Thêm hàng vào giỏ và cập nhật lại Session
+				gioHang.them(dto);
+				session.setAttribute("gioHang", gioHang);
+			}
+		} finally {
+			if (client != null) client.close();
+		}
+
+		// Xử lý xong thì tải lại trang Kho Hàng
+		response.sendRedirect("customer?action=khoHang");
+	}
+
+	// 2. CHỨC NĂNG CHUYỂN TRANG XEM GIỎ HÀNG
+	private void payment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Đẩy sang trang payment.jsp để hiển thị danh sách các món đang nằm trong Session "gioHang"
+		request.getRequestDispatcher("payment.jsp").forward(request, response);
+	}
+
+	// 3. CHỨC NĂNG THANH TOÁN (GỌI API ĐỂ LƯU XUỐNG CƠ SỞ DỮ LIỆU)
+	private void thanhToan(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		HoaDon gioHang = (HoaDon) session.getAttribute("gioHang");
+
+		// Tránh trường hợp giỏ trống mà cố tình bấm thanh toán
+		if (gioHang == null || gioHang.getDanhSachChiTiet().isEmpty()) {
+			request.setAttribute("errorMsg", "Giỏ hàng của bạn đang trống!");
+			request.getRequestDispatcher("payment.jsp").forward(request, response);
+			return;
+		}
+
+		Client client = null;
+		try {
+			client = ClientBuilder.newClient();
+			// Gọi API tạo hóa đơn mà chúng ta vừa code ở bước trước
+			WebTarget target = client.target(HOADON_URL).path("tao");
+			Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(gioHang));
+
+			if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+				// Lưu thành công -> Xóa sạch giỏ hàng trong Session
+				session.removeAttribute("gioHang");
+				
+				request.setAttribute("successMsg", "Thanh toán thành công! Mã đơn của bạn là: " + gioHang.getMaSo());
+				request.getRequestDispatcher("payment.jsp").forward(request, response);
+			} else {
+				String errorMsg = apiResponse.readEntity(String.class);
+				request.setAttribute("errorMsg", "Lỗi thanh toán: " + errorMsg);
+				request.getRequestDispatcher("payment.jsp").forward(request, response);
+			}
+		} finally {
+			if (client != null) client.close();
+		}
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Fix lỗi font tiếng Việt
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		String action = request.getParameter("action");
+
+		if (action == null) {
+			response.sendRedirect("customer?action=khoHang");
+			return;
+		}
+
+		switch (action) {
+			case ADD_TO_CART:
+				themVaoGio(request, response);
+				break;
+			case VIEW_CART:
+				payment(request, response);
+				break;
+			case CHECKOUT:
+				thanhToan(request, response);
+				break;
+			default:
+				response.sendRedirect("customer?action=khoHang");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+}

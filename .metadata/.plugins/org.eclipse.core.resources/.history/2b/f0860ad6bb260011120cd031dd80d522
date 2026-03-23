@@ -1,0 +1,6 @@
+package taikhoan;
+
+public interface IKhachHang {
+	Response addUser(CustomerDTO dto);
+	Response del
+}

@@ -1,0 +1,17 @@
+package invoice;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import hanghoa.ChiTietDTO;
+
+public class HoaDonDTO implements Serializable{
+	private String maSo;
+	private String maKhachHang;
+	private String tieuDe;
+	private Date date;
+	private List<ChiTietDTO> danhSachChiTiet = new ArrayList<ChiTietDTO>();
+	
+}

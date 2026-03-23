@@ -1,0 +1,101 @@
+package customer;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+public class KhachHangDTO implements Serializable {
+	private String khachHangId;
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	private String password;
+	private boolean laAdmin;
+	private boolean vip;
+	private java.util.Date ngayVip;
+	
+	public boolean isVip() {
+		return vip;
+	}
+
+	public void setVip(boolean vip) {
+		this.vip = vip;
+	}
+
+	public java.util.Date getNgayVip() {
+		return ngayVip;
+	}
+
+	public void setNgayVip(java.util.Date ngayVip) {
+		this.ngayVip = ngayVip;
+	}
+
+	public KhachHangDTO() {
+		super();
+	}
+
+	public boolean isLaAdmin() {
+		return laAdmin;
+	}
+
+	public void setLaAdmin(boolean laAdmin) {
+		this.laAdmin = laAdmin;
+	}
+
+	public KhachHangDTO(String cccd, String hoTen, String diaChi, String password, boolean laAdmin) {
+		super();
+		this.khachHangId = UUID.randomUUID().toString();
+		this.cccd = cccd;
+		this.hoTen = hoTen;
+		this.diaChi = diaChi;
+		this.password = password;
+		this.laAdmin = laAdmin;
+	}
+	
+	public KhachHangDTO(KhachHangDTO dto) { 
+		this.cccd = dto.getCccd();
+		this.hoTen= dto.getHoTen();
+		this.diaChi = dto.getDiaChi();
+		this.password = dto.getPassword();
+		this.khachHangId = UUID.randomUUID().toString();
+	}
+
+	public String getCccd() {
+		return cccd;
+	}
+
+	public void setCccd(String cccd) {
+		this.cccd = cccd;
+	}
+
+	public String getHoTen() {
+		return hoTen;
+	}
+
+	public void setHoTen(String hoTen) {
+		this.hoTen = hoTen;
+	}
+
+	public String getDiaChi() {
+		return diaChi;
+	}
+
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public String getKhachHangId() {
+		return khachHangId;
+	}
+
+	public void setKhachHangId(String khachHangId) {
+		this.khachHangId = khachHangId;
+	}
+}

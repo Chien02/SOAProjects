@@ -1,0 +1,63 @@
+package hanghoa;
+
+public class ChiTietDTO {
+	private String maSo;
+	private String tieuDe;
+	private String tenNhanVien;
+	private int soLuong;
+	private double donGia;
+	
+	public ChiTietDTO() {
+		super();
+	}
+
+	public ChiTietDTO(String maSo, String tieuDe, String tenNhanVien, int soLuong, double donGia) {
+		super();
+		this.maSo = maSo;
+		this.tieuDe = tieuDe;
+		this.tenNhanVien = tenNhanVien;
+		this.soLuong = soLuong;
+		this.donGia = donGia;
+	}
+
+	public String getMaSo() {
+		return maSo;
+	}
+
+	public void setMaSo(String maSo) {
+		this.maSo = maSo;
+	}
+
+	public String getTieuDe() {
+		return tieuDe;
+	}
+
+	public void setTieuDe(String tieuDe) {
+		this.tieuDe = tieuDe;
+	}
+
+	public String getTenNhanVien() {
+		return tenNhanVien;
+	}
+
+	public void setTenNhanVien(String tenNhanVien) {
+		this.tenNhanVien = tenNhanVien;
+	}
+
+	public int getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(int soLuong) {
+		this.soLuong = soLuong;
+	}
+
+	public double getDonGia() {
+		return donGia;
+	}
+
+	public void setDonGia(double donGia) {
+		this.donGia = donGia;
+	}
+	
+}

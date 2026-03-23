@@ -1,0 +1,17 @@
+package hanghoa;
+
+public class ChiTiet extends HangHoa{
+	private int soLuong;
+	private double donGia;
+	public ChiTiet(String maSo, String tieuDe, String tenNhanVien, int soLuong, double donGia) {
+		super(maSo, tieuDe, tenNhanVien);
+		this.soLuong = soLuong;
+		this.donGia = donGia;
+	}
+	
+	public ChiTiet(String maSo, String tieuDe, String tenNhanVien) {
+		super(maSo, tieuDe, tenNhanVien);
+	}
+	
+	
+}

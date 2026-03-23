@@ -1,0 +1,43 @@
+package taikhoan;
+
+public class Customer {
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	
+	public Customer() {
+		super();
+	}
+
+	public Customer(String cccd, String hoTen, String diaChi) {
+		super();
+		this.cccd = cccd;
+		this.hoTen = hoTen;
+		this.diaChi = diaChi;
+	}
+
+	public String getCccd() {
+		return cccd;
+	}
+
+	public void setCccd(String cccd) {
+		this.cccd = cccd;
+	}
+
+	public String getHoTen() {
+		return hoTen;
+	}
+
+	public void setHoTen(String hoTen) {
+		this.hoTen = hoTen;
+	}
+
+	public String getDiaChi() {
+		return diaChi;
+	}
+
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
+	}
+	
+}

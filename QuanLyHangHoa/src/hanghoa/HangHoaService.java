@@ -1,0 +1,48 @@
+package hanghoa;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+
+@Path("/hangHoa")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class HangHoaService implements IHangHoa {
+	private static HangHoaImpl hangHoaImpl = new HangHoaImpl();
+
+	@Override
+	@POST
+	@Path("/themHangHoa")
+	public Response themHangHoa(ChiTietDTO chiTiet) {
+		return hangHoaImpl.themHangHoa(chiTiet);
+	}
+
+	@Override
+	@POST
+	@Path("/capNhatHangHoa")
+	public Response chinhSuaHangHoa(ChiTietDTO chiTiet) {
+		return hangHoaImpl.chinhSuaHangHoa(chiTiet);
+	}
+
+	@Override
+	@POST
+	@Path("/xoaHangHoa")
+	public Response xoaHangHoa(ChiTietDTO chiTiet) {
+		return hangHoaImpl.xoaHangHoa(chiTiet);
+	}
+
+	@Override
+	@GET
+	@Path("/chiTiet")
+	public Response xemChiTiet(@QueryParam("maSo") String maSo) {
+		return hangHoaImpl.xemChiTiet(maSo);
+	}
+
+	@Override
+	@GET
+	@Path("/danhSach")
+	public Response getDanhSach() {
+		return hangHoaImpl.getDanhSach();
+	}
+
+}

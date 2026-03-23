@@ -1,0 +1,40 @@
+package invoice;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Date;
+
+public class HoaDon {
+	private String maSo;
+	private String tieuDe;
+	private java.util.Date dateTime;
+	private String customerId;
+	
+	public HoaDon() {
+		super();
+	}
+	public String getMaSo() {
+		return maSo;
+	}
+	public void setMaSo(String maSo) {
+		this.maSo = maSo;
+	}
+	public String getTieuDe() {
+		return tieuDe;
+	}
+	public void setTieuDe(String tieuDe) {
+		this.tieuDe = tieuDe;
+	}
+	public String getNhanVien() {
+		return nhanVien;
+	}
+	public void setNhanVien(String nhanVien) {
+		this.nhanVien = nhanVien;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+}

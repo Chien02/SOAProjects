@@ -1,0 +1,37 @@
+package hanghoa;
+
+import javax.ws.rs.core.Response;
+
+public class HangHoaService implements IHangHoa {
+
+	@Override
+	public Response themHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response chinhSuaHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response xoaHangHoa(ChiTiet chiTiet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response xemChiTiet(String maSo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getDanhSach() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

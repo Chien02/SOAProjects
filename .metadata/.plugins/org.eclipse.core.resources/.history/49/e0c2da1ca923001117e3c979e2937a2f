@@ -1,0 +1,10 @@
+package hanghoa;
+
+import javax.ws.rs.core.Response;
+
+public interface IHangHoa {
+	Response themHangHoa(ChiTiet chiTiet);
+	Response chinhSuaHangHoa(ChiTiet chiTiet);
+	Response xoaHangHoa(ChiTiet chiTiet);
+	
+}

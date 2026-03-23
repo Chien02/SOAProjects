@@ -1,0 +1,5 @@
+package hanghoa;
+
+public interface IHangHoa {
+
+}

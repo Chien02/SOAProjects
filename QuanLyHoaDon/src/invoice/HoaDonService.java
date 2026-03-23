@@ -1,0 +1,58 @@
+package invoice;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import hanghoa.ChiTietDTO;
+
+@Path("/hoaDon")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class HoaDonService implements IHoaDon {
+	private static HoaDonImpl hoaDonImpl = new HoaDonImpl();
+
+	@Override
+	@POST
+	@Path("/tao")
+	public Response taoHoaDon(HoaDon hoaDon) {
+		return hoaDonImpl.taoHoaDon(hoaDon);
+	}
+
+	@Override
+	@POST
+	@Path("/{maHoaDon}/themHang")
+	public Response themVaoHoaDon(@PathParam("maHoaDon") String maHoaDon, ChiTietDTO dto) {
+		// Dùng @PathParam để lấy Mã Hóa Đơn từ URL (VD: /hoaDon/HD01/themHang)
+		return hoaDonImpl.themVaoHoaDon(maHoaDon, dto);
+	}
+
+	@Override
+	@PUT
+	@Path("/capNhat")
+	public Response capNhatHoaDon(HoaDon hoaDon) {
+		return hoaDonImpl.capNhatHoaDon(hoaDon);
+	}
+
+	@Override
+	@GET
+	@Path("/chiTiet/{maSo}")
+	public Response layHoaDon(@PathParam("maSo") String maSo) {
+		return hoaDonImpl.layHoaDon(maSo);
+	}
+
+	@Override
+	@GET
+	@Path("/danhSach")
+	public Response layDanhSach() {
+		return hoaDonImpl.layDanhSach();
+	}
+	
+	// Thêm hàm này vào class HoaDonService
+	@Override
+	@GET
+	@Path("/lichSu/{maKhachHang}")
+	public Response layDanhSachTheoKhachHang(@PathParam("maKhachHang") String maKhachHang) {
+	    return hoaDonImpl.layDanhSachTheoKhachHang(maKhachHang);
+	}
+}

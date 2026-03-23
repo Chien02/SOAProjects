@@ -1,0 +1,93 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<!DOCTYPE html>
+<html>
+<header>
+	<meta charset="UTF-8">
+	<title>Quan Ly Ngan Hang</title>
+	<link href="style.css" rel="stylesheet"/>
+</header>
+<body>
+	<h1>Xin chao ${taiKhoan.chuTaiKhoan}</h1>
+	<nav>
+		<table class="masterTable">
+			<thead>
+				<tr>
+					<th><h3>TUY CHON</h3></th>
+					<th class="functionTHead"><h3>NAP TIEN</h3></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td> <a href="QLNHangWebClient?action=thongtin">THONG TIN</a> </td>
+					<td rowspan="8" class="merged-cell">
+						<form action="QLNHangWebClient?action=naptien" method="POST">
+							<table class="functionTable">
+								<thead>
+									<th></th>
+									<th></th>
+								</thead>
+								<tbody>
+									<tr>
+	                                    <td colspan="2" style="text-align: center; color: red; font-weight: bold;">${thongBaoLoi}</td>
+	                                </tr>
+									<tr>
+	                                    <td colspan="2" style="text-align: center; color: green; font-weight: bold;">${thongBaoThanhCong}</td>
+	                                </tr>
+									<tr>
+										<td>So tai khoan:</td>
+										<td>${taiKhoan.soTaiKhoan}</td>
+									</tr>
+									<tr>
+										<td>Chu tai khoan:</td>
+										<td>${taiKhoan.chuTaiKhoan}</td>
+									</tr>
+									<tr>
+										<td>So du:</td>
+										<td>${taiKhoan.soDu}</td>
+									</tr>
+									<tr>
+										<td><label>So tien muon nap: </label></td>
+										<td><input type="text" name="soTien" required></td>
+									</tr>
+									<tr>
+										<td><label>Ma pin: </label></td>
+										<td><input type="password" name="maPin" required></td>
+									</tr>
+									<tr>
+										<td colspan="2" style="text-align: center; padding: 15px;"><button type="submit">NAP TIEN</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td> <a href="QLNHangWebClient?action=naptien">NAP TIEN</a> </td>
+				</tr>
+				<tr>
+					<td> <a href="QLNHangWebClient?action=ruttien">RUT TIEN</a> </td>
+				</tr>
+				<tr>
+					<td> <a href="QLNHangWebClient?action=chuyentien">CHUYEN TIEN</a> </td>
+				</tr>
+				<c:if test="${taiKhoan.laAdmin}">
+					<tr>
+						<td> <a href="QLNHangWebClient?action=danhsach">DANH SACH TAI KHOAN</a> </td>
+					</tr>
+					<tr>
+						<td> <a href="QLNHangWebClient?action=themtaikhoan">THEM TAI KHOAN</a> </td>
+					</tr>
+					<tr>
+						<td> <a href="QLNHangWebClient?action=timtaikhoan">TIM TAI KHOAN</a> </td>
+					</tr>
+				</c:if>
+				<tr>
+					<td> <a href="QLNHangWebClient?action=dangxuat">DANG XUAT</a> </td>
+				</tr>
+			</tbody>
+		</table>
+	</nav>
+</body>
+</html>

@@ -1,0 +1,7 @@
+package invoice;
+
+public class HoaDon {
+	private String maSo;
+	private String tieuDe;
+	private String nhanVien;
+}

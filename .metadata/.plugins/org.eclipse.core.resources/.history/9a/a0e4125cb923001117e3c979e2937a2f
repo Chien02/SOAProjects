@@ -1,0 +1,42 @@
+package invoice;
+
+public class HoaDon {
+	private String maSo;
+	private String tieuDe;
+	private String nhanVien;
+	private Date date;
+	public HoaDon(String maSo, String tieuDe, String nhanVien, Date date) {
+		super();
+		this.maSo = maSo;
+		this.tieuDe = tieuDe;
+		this.nhanVien = nhanVien;
+		this.date = date;
+	}
+	public HoaDon() {
+		super();
+	}
+	public String getMaSo() {
+		return maSo;
+	}
+	public void setMaSo(String maSo) {
+		this.maSo = maSo;
+	}
+	public String getTieuDe() {
+		return tieuDe;
+	}
+	public void setTieuDe(String tieuDe) {
+		this.tieuDe = tieuDe;
+	}
+	public String getNhanVien() {
+		return nhanVien;
+	}
+	public void setNhanVien(String nhanVien) {
+		this.nhanVien = nhanVien;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+}

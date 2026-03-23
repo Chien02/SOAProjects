@@ -1,0 +1,13 @@
+package invoice;
+
+import javax.ws.rs.core.Response;
+import hanghoa.ChiTietDTO;
+
+public interface IHoaDon {
+	// SỬA LỖI 2: Thêm đúng các tham số để API biết cần xử lý dữ liệu nào
+	Response taoHoaDon(HoaDon hoaDon);
+	Response themVaoHoaDon(String maHoaDon, ChiTietDTO dto);
+	Response capNhatHoaDon(HoaDon hoaDon); // Đã sửa lỗi chính tả capNhap -> capNhat
+	Response layHoaDon(String maSo);
+	Response layDanhSach();
+}

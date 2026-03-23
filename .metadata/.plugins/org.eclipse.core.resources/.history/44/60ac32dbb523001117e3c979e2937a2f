@@ -1,0 +1,16 @@
+package hanghoa;
+
+public class ChiTietDTO {
+	private String maSo;
+	private String ten;
+	private String nsxuat;
+	private int soLuong;
+	private double donGia;
+	
+	public ChiTietDTO() {
+		super();
+	}
+
+	
+	
+}

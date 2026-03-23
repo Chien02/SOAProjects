@@ -1,0 +1,9 @@
+1773591779575	Move 'games.sql' to 'sqls'
+1773670234789	Rename type 'IAuthorizeService'
+1773670250330	Rename type 'AuthorizeDTO'
+1773670267708	Rename type 'AuthorizedServiceImpl'
+1773670307626	Delete element
+1773670318071	Rename type 'AuthorizationImpl'
+1773670455046	Rename type 'AuthorizationDTO'
+1773682186725	Delete element
+1773686825013	Rename resource 'user-info.jsp'

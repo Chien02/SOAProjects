@@ -1,0 +1,65 @@
+package hanghoa;
+
+import java.io.Serializable;
+
+public class ChiTietDTO implements Serializable {
+	private String maSo;
+	private String ten;
+	private String nsxuat;
+	private int soLuong;
+	private double donGia;
+	
+	public ChiTietDTO() {
+		super();
+	}
+
+	public ChiTietDTO(String maSo, String ten, String nsxuat, int soLuong, double donGia) {
+		super();
+		this.maSo = maSo;
+		this.ten = ten;
+		this.nsxuat = nsxuat;
+		this.soLuong = soLuong;
+		this.donGia = donGia;
+	}
+
+	public String getMaSo() {
+		return maSo;
+	}
+
+	public void setMaSo(String maSo) {
+		this.maSo = maSo;
+	}
+
+	public String getTen() {
+		return ten;
+	}
+
+	public void setTen(String ten) {
+		this.ten = ten;
+	}
+
+	public String getNsxuat() {
+		return nsxuat;
+	}
+
+	public void setNsxuat(String nsxuat) {
+		this.nsxuat = nsxuat;
+	}
+
+	public int getSoLuong() {
+		return soLuong;
+	}
+
+	public void setSoLuong(int soLuong) {
+		this.soLuong = soLuong;
+	}
+
+	public double getDonGia() {
+		return donGia;
+	}
+
+	public void setDonGia(double donGia) {
+		this.donGia = donGia;
+	}
+	
+}

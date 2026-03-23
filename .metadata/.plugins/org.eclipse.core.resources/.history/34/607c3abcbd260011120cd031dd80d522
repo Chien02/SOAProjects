@@ -1,0 +1,65 @@
+package customer;
+
+import java.io.Serializable;
+
+public class KhachHangDTO implements Serializable {
+	private String cccd;
+	private String hoTen;
+	private String diaChi;
+	private String password;
+	private String passwordHash;
+	private boolean laAdmin;
+	
+	public KhachHangDTO() {
+		super();
+	}
+
+	public KhachHangDTO(String cccd, String hoTen, String diaChi, String password, String passwordHash) {
+		super();
+		this.cccd = cccd;
+		this.hoTen = hoTen;
+		this.diaChi = diaChi;
+		this.password = password;
+		this.passwordHash = passwordHash;
+	}
+
+	public String getCccd() {
+		return cccd;
+	}
+
+	public void setCccd(String cccd) {
+		this.cccd = cccd;
+	}
+
+	public String getHoTen() {
+		return hoTen;
+	}
+
+	public void setHoTen(String hoTen) {
+		this.hoTen = hoTen;
+	}
+
+	public String getDiaChi() {
+		return diaChi;
+	}
+
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPasswordHash() {
+		return passwordHash;
+	}
+
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+}

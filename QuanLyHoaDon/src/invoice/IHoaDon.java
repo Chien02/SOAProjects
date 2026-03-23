@@ -1,0 +1,13 @@
+package invoice;
+
+import javax.ws.rs.core.Response;
+import hanghoa.ChiTietDTO;
+
+public interface IHoaDon {
+	Response taoHoaDon(HoaDon hoaDon);
+	Response themVaoHoaDon(String maHoaDon, ChiTietDTO dto);
+	Response capNhatHoaDon(HoaDon hoaDon);
+	Response layHoaDon(String maSo);
+	Response layDanhSach();
+	Response layDanhSachTheoKhachHang(String maKhachHang);
+}

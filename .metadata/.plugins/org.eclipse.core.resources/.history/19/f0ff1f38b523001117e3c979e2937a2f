@@ -1,0 +1,6 @@
+package hanghoa;
+
+public class HangHoa {
+	private String maSo;
+	
+}

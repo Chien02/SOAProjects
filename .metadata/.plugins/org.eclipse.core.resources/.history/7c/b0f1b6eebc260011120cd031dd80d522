@@ -1,0 +1,12 @@
+package hanghoa;
+
+import java.io.Serializable;
+
+public class HangHoaDTO implements Serializable {
+	private String hangHoaId;
+	private String ten;
+	private String donGia;
+	private String nhaSanXuat;
+	
+	
+}
