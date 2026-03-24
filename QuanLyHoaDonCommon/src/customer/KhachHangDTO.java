@@ -12,7 +12,17 @@ public class KhachHangDTO implements Serializable {
 	private boolean laAdmin;
 	private boolean vip;
 	private java.util.Date ngayVip;
+	private java.util.Date ngayHetHanVip;
+	private double tiLeGiam;
 	
+	public java.util.Date getNgayHetHanVip() {
+		return ngayHetHanVip;
+	}
+
+	public void setNgayHetHanVip(java.util.Date ngayHetHanVip) {
+		this.ngayHetHanVip = ngayHetHanVip;
+	}
+
 	public boolean isVip() {
 		return vip;
 	}
@@ -97,5 +107,13 @@ public class KhachHangDTO implements Serializable {
 
 	public void setKhachHangId(String khachHangId) {
 		this.khachHangId = khachHangId;
+	}
+
+	public double getTiLeGiam() {
+		return tiLeGiam;
+	}
+
+	public void setTiLeGiam(double tiLeGiam) {
+		this.tiLeGiam = tiLeGiam;
 	}
 }

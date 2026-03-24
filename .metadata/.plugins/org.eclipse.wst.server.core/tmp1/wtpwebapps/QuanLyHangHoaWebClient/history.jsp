@@ -16,7 +16,8 @@
 		<a href="userInfo.jsp">Tài khoản</a>
 		
 		<c:if test="${khachHang != null && khachHang.laAdmin}">
-			<a href="hanghoa?action=inventory">Kho Hàng</a>
+			<a href="hanghoa?action=inventory">Quản lý Kho Hàng</a>
+			<a href="customer?action=danhSach">Quản lý Người Dùng</a>
 		</c:if>
 		<c:if test="${khachHang != null && !khachHang.laAdmin}">
 			<a href="invoice?action=payment">Thanh toán</a>
@@ -27,8 +28,15 @@
 	</aside>
 	<main>
 		<div class="section-header">
-            <h2 class="section-title">Lịch Sử Mua Hàng Của Bạn</h2>
-        </div>
+		    <c:choose>
+		        <c:when test="${not empty adminViewingCccd}">
+		            <h2 class="section-title">Lịch Sử Giao Dịch - Khách hàng: ${adminViewingCccd}</h2>
+		        </c:when>
+		        <c:otherwise>
+		            <h2 class="section-title">Lịch Sử Mua Hàng Của Bạn</h2>
+		        </c:otherwise>
+		    </c:choose>
+		</div>
         
 		<c:choose>
             <c:when test="${not empty lichSuHoaDon}">

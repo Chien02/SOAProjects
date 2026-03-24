@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import customer.KhachHangDTO;
 import hanghoa.ChiTiet;
+import java.text.SimpleDateFormat;
 
 @WebServlet("/customer")
 public class KhachHangWebClient extends HttpServlet {
@@ -36,6 +38,9 @@ public class KhachHangWebClient extends HttpServlet {
 	private final String UPDATE = "capNhat";
 	private final String INVENTORY = "khoHang";
 	private final String UPGRADE_VIP = "dangKyVip";
+	private final String ADMIN_UPDATE = "adminUpdateUser";
+	private final double TILEMACDINH = 10;
+	
 	ClientConfig config = new ClientConfig();
        
     public KhachHangWebClient() {
@@ -145,20 +150,102 @@ public class KhachHangWebClient extends HttpServlet {
 	}
 	
 	private void getUserList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(CUSTOMER_URL).path(LIST);
-		
-		Response apiResponse = target.request(MediaType.APPLICATION_JSON).get();
-		
-		if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
-			List<KhachHangDTO> danhSach = apiResponse.readEntity(new GenericType<List<KhachHangDTO>>() {});
-			request.setAttribute("danhSach", danhSach);
-			request.getRequestDispatcher("userInfo.jsp").forward(request, response);
-		} else {
-			String errorMsg = apiResponse.readEntity(String.class);
-    		request.setAttribute("errorMsg", errorMsg);
-    		request.getRequestDispatcher("userInfo.jsp").forward(request, response);
-		}
+	    // Kiểm tra có phải là admin thì mới cho vào
+	    KhachHangDTO currentUser = (KhachHangDTO) request.getSession().getAttribute("khachHang");
+	    if (currentUser == null || !currentUser.isLaAdmin()) {
+	        response.sendRedirect("index.jsp");
+	        return;
+	    }
+
+	    Client client = ClientBuilder.newClient();
+	    try {
+	        WebTarget target = client.target(CUSTOMER_URL).path(LIST);
+	        Response apiResponse = target.request(MediaType.APPLICATION_JSON).get();
+	        
+	        if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+	            List<KhachHangDTO> danhSach = apiResponse.readEntity(new GenericType<List<KhachHangDTO>>() {});
+	            request.setAttribute("danhSach", danhSach);
+	            // Chuyển hướng sang trang quản lý người dùng
+	            request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+	        } else {
+	            String errorMsg = apiResponse.readEntity(String.class);
+	            request.setAttribute("errorMsg", errorMsg);
+	            request.getRequestDispatcher("userManagement.jsp").forward(request, response);
+	        }
+	    } finally {
+	        if (client != null) client.close();
+	    }
+	}
+	
+	private void adminUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // 1. Kiểm tra bảo mật: Chỉ Admin mới được phép thực hiện
+	    KhachHangDTO adminUser = (KhachHangDTO) request.getSession().getAttribute("khachHang");
+	    if (adminUser == null || !adminUser.isLaAdmin()) {
+	        response.sendRedirect("index.jsp");
+	        return;
+	    }
+
+	    Client client = null;
+	    try {
+	        // 2. Lấy và đóng gói dữ liệu từ Form
+	        KhachHangDTO dto = new KhachHangDTO();
+	        dto.setCccd(request.getParameter("cccd"));
+	        dto.setHoTen(request.getParameter("hoTen"));
+	        dto.setDiaChi(request.getParameter("diaChi"));
+	        
+	    	// Xử lý biến boolean admin
+	        boolean laAdmin = Boolean.parseBoolean(request.getParameter("laAdmin"));
+	        dto.setLaAdmin(laAdmin);
+
+	        // Xử lý biến boolean VIP
+	        boolean isVip = Boolean.parseBoolean(request.getParameter("vip"));
+	        dto.setVip(isVip);
+
+	        // Xử lý Tỉ lệ giảm giá (Ép kiểu về int hoặc double tuỳ class DTO của bạn)
+	        String tiLeGiamStr = request.getParameter("tiLeGiam");
+	        if (tiLeGiamStr != null && !tiLeGiamStr.isEmpty()) {
+	            dto.setTiLeGiam(Double.parseDouble(tiLeGiamStr));
+	        }
+
+	        // Xử lý Ngày tháng (Từ String HTML "yyyy-MM-dd" sang java.util.Date)
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        String ngayVipStr = request.getParameter("ngayVip");
+	        String ngayHetHanStr = request.getParameter("ngayHetHanVip");
+
+	        if (ngayVipStr != null && !ngayVipStr.isEmpty()) {
+	            dto.setNgayVip(sdf.parse(ngayVipStr));
+	        } else {
+	            dto.setNgayVip(null); // Nếu không có ngày thì set Null
+	        }
+	        
+	        if (ngayHetHanStr != null && !ngayHetHanStr.isEmpty()) {
+	            dto.setNgayHetHanVip(sdf.parse(ngayHetHanStr));
+	        } else {
+	            dto.setNgayHetHanVip(null);
+	        }
+
+	        // 3. Gọi API cập nhật (Tái sử dụng lại API "capNhat" hiện có)
+	        client = ClientBuilder.newClient();
+	        WebTarget target = client.target(CUSTOMER_URL).path(UPDATE); // path("capNhat")
+	        Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(dto));
+
+	        // 4. Xử lý kết quả trả về
+	        if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+	            request.setAttribute("successMsg", "Đã cập nhật thông tin tài khoản CCCD: " + dto.getCccd() + " thành công!");
+	        } else {
+	            String errorMsg = apiResponse.readEntity(String.class);
+	            request.setAttribute("errorMsg", "Lỗi cập nhật: " + errorMsg);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        request.setAttribute("errorMsg", "Dữ liệu nhập vào không hợp lệ (sai định dạng ngày/số)!");
+	    } finally {
+	        if (client != null) client.close();
+	    }
+
+	    // 5. Gọi lại hàm getUserList để lấy danh sách mới và Load lại trang userManagement.jsp
+	    getUserList(request, response);
 	}
 
 	private void getInventory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -184,6 +271,7 @@ public class KhachHangWebClient extends HttpServlet {
 	private void dangKyVip(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    HttpSession session = request.getSession();
 	    KhachHangDTO user = (KhachHangDTO) session.getAttribute("khachHang");
+	    user.setTiLeGiam(TILEMACDINH);
 	    
 	    if (user == null) {
 	        response.sendRedirect("index.jsp");
@@ -192,9 +280,9 @@ public class KhachHangWebClient extends HttpServlet {
 
 	    Client client = ClientBuilder.newClient();
 	    try {
-	        // Gọi API: /khachHang/{cccd}/dangKyVip
-	        WebTarget target = client.target(CUSTOMER_URL).path(user.getCccd()).path("dangKyVip");
-	        Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(""));
+	        // Gọi API: /khachHang/dangKyVip
+	        WebTarget target = client.target(CUSTOMER_URL).path("dangKyVip");
+	        Response apiResponse = target.request(MediaType.APPLICATION_JSON).post(Entity.json(user));
 	        
 	        if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
 	            KhachHangDTO updatedUser = apiResponse.readEntity(KhachHangDTO.class);
@@ -240,6 +328,9 @@ public class KhachHangWebClient extends HttpServlet {
 			break;
 		case UPGRADE_VIP:
 		    dangKyVip(request, response);
+		    break;
+		case ADMIN_UPDATE:
+		    adminUpdateUser(request, response);
 		    break;
 		default:
 			// Quay về trang đăng nhập

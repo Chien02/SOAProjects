@@ -2,19 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="tfoot" key="selection"/>
+		<item value="adminUpdate" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="adminUpdate"/>
+			<item value="admin"/>
+			<item value="updateAdmin"/>
+			<item value="10%"/>
+			<item value="dangKyVip"/>
+			<item value="capNhat"/>
+			<item value="capNhaty"/>
+			<item value=".modal"/>
+			<item value="editBtn"/>
 			<item value="tfoot"/>
 			<item value="jps"/>
 			<item value="BCrypt"/>
 			<item value="session"/>
 			<item value="first"/>
 			<item value="|"/>
-			<item value="thongbaoLoi"/>
 		</list>
 		<list key="replacehistory">
 		</list>

@@ -35,6 +35,7 @@ public class HoaDonWebClient extends HttpServlet {
 	private final String VIEW_CART = "payment";
 	private final String CHECKOUT = "thanhToan";
 	private final String HISTORY = "xemLichSu";
+	private final String ADMIN_HISTORY = "adminHistory";
 
     public HoaDonWebClient() {
         super();
@@ -160,6 +161,44 @@ public class HoaDonWebClient extends HttpServlet {
 	        if (client != null) client.close();
 	    }
 	}
+	
+	private void adminHistory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // Kiểm tra bảo mật: Phải là Admin mới được phép xem
+	    HttpSession session = request.getSession();
+	    KhachHangDTO admin = (KhachHangDTO) session.getAttribute("khachHang");
+
+	    if (admin == null || !admin.isLaAdmin()) {
+	        response.sendRedirect("index.jsp");
+	        return;
+	    }
+
+	    // Lấy CCCD của người dùng cần xem từ URL
+	    String targetCccd = request.getParameter("cccd");
+
+	    Client client = null;
+	    try {
+	        client = ClientBuilder.newClient();
+	        // Gọi lại API Lịch sử 
+	        WebTarget target = client.target(HOADON_URL).path("lichSu").path(targetCccd);
+	        Response apiResponse = target.request(MediaType.APPLICATION_JSON).get();
+
+	        if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+	            // Tái sử dụng lại list HoaDon
+	            List<HoaDon> lichSu = apiResponse.readEntity(new javax.ws.rs.core.GenericType<List<HoaDon>>() {});
+	            request.setAttribute("lichSuHoaDon", lichSu);
+	            
+	            // Gửi thêm 1 biến để trang jsp biết là Admin đang xem
+	            request.setAttribute("adminViewingCccd", targetCccd); 
+	        } else {
+	            request.setAttribute("errorMsg", "Không thể tải lịch sử mua hàng của người dùng này.");
+	        }
+	        
+	        // Tái sử dụng lại trang history.jsp
+	        request.getRequestDispatcher("history.jsp").forward(request, response);
+	    } finally {
+	        if (client != null) client.close();
+	    }
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Fix lỗi font tiếng Việt
@@ -186,6 +225,9 @@ public class HoaDonWebClient extends HttpServlet {
 			case HISTORY:
 				xemLichSu(request, response);
 				break;
+			case ADMIN_HISTORY:
+			    adminHistory(request, response);
+			    break;
 			default:
 				response.sendRedirect("customer?action=khoHang");
 		}

@@ -1,5 +1,0 @@
-package taikhoan;
-
-public class KhachHangImpl implements IKhachHang {
-
-}

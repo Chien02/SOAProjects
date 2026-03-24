@@ -49,8 +49,15 @@ public class KhachHangService implements IKhachHang {
 	}
 	
 	@POST
-	@Path("/{cccd}/dangKyVip")
-	public Response dangKyVip(@PathParam("cccd") String cccd) {
-	    return khachHangImpl.dangKyVip(cccd);
+	@Path("/dangKyVip")
+	public Response dangKyVip(KhachHangDTO dto) {
+	    return khachHangImpl.dangKyVip(dto);
+	}
+
+	@Override
+	@POST
+	@Path("/capNhatVip")
+	public Response capNhatVIP(KhachHangDTO dto) {
+		return khachHangImpl.capNhatVIP(dto);
 	}
 }

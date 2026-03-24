@@ -46,15 +46,19 @@ public class KhachHangImpl implements IKhachHang {
 
 	@Override
 	public Response capNhatKhachHang(KhachHangDTO dto) {
-		String cccd = dto.getCccd(); 
-		for (KhachHangDTO kh : danhSachKH) {
-			if (cccd != null && cccd.equals(kh.getCccd())) {
-				kh.setDiaChi(dto.getDiaChi());
-				kh.setHoTen(dto.getHoTen());
-				return Response.ok("Cập nhật thông tin thành công").build();
-			}
-		}
-		return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy khách hàng để cập nhật").build();
+		KhachHangDTO khachHang = timKhachHangTheoCCCD(dto.getCccd());
+		if (khachHang == null) return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy khách hàng để cập nhật").build();
+		
+		khachHang.setHoTen(dto.getHoTen());
+		khachHang.setDiaChi(dto.getDiaChi());
+		khachHang.setLaAdmin(dto.isLaAdmin());
+		
+		khachHang.setVip(dto.isVip());
+		khachHang.setNgayVip(dto.getNgayVip());
+		khachHang.setNgayHetHanVip(dto.getNgayHetHanVip());
+		khachHang.setTiLeGiam(dto.getTiLeGiam());
+		
+		return Response.ok(khachHang).build();
 	}
 
 	@Override
@@ -75,13 +79,30 @@ public class KhachHangImpl implements IKhachHang {
 	}
 	
 	@Override
-	public Response dangKyVip(String cccd) {
-	    KhachHangDTO kh = timKhachHangTheoCCCD(cccd);
+	public Response dangKyVip(KhachHangDTO dto) {
+	    KhachHangDTO kh = timKhachHangTheoCCCD(dto.getCccd());
 	    if (kh != null) {
 	        kh.setVip(true);
-	        kh.setNgayVip(new java.util.Date()); // Lưu ngày hiện tại
+	        
+	        kh.setNgayVip(new java.util.Date()); // Lấy ngày giờ hiện tại của hệ thống
+	        kh.setTiLeGiam(10); // Cố định giảm 10% cho khách hàng mới đăng ký
+	        kh.setNgayHetHanVip(null); // Tạm thời để null nếu VIP là vĩnh viễn
+	        
 	        return Response.ok(kh).build(); // Trả về luôn object khách hàng mới để Client cập nhật
 	    }
 	    return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy khách hàng").build();
+	}
+
+	@Override
+	public Response capNhatVIP(KhachHangDTO dto) {
+		KhachHangDTO kh = timKhachHangTheoCCCD(dto.getCccd());
+		if (kh == null) return Response.status(Response.Status.NOT_FOUND).entity("Không tìm thấy khách hàng").build();
+		
+		kh.setVip(dto.isVip());
+        kh.setNgayVip(dto.getNgayVip());
+        kh.setTiLeGiam(dto.getTiLeGiam());
+        kh.setNgayHetHanVip(dto.getNgayHetHanVip());
+        
+		return Response.ok(kh).build();
 	}
 }

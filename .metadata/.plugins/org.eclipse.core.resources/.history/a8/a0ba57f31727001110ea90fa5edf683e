@@ -1,0 +1,111 @@
+package ctu.cit;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.client.ClientConfig;
+
+/**
+ * Servlet implementation class CalcWebClient
+ */
+@WebServlet("/CalcWebClient")
+public class CalcWebClient extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	private final String BASE_URL = "http://localhost:8080/CalcService3/rest/";
+	ClientConfig config = new ClientConfig();
+       
+    
+    public CalcWebClient() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Client client = ClientBuilder.newClient(config);
+		
+		// Neu ko co nhap gi trong form thi load trang
+		String phepToan = request.getParameter("phepToan");
+		if (phepToan == null) {
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			return;
+		}
+		
+		// Lay duong dan ma form da gui (nam trong action)
+		String path = "calc3";
+		
+		// Xu ly yeu cau
+		try {
+			WebTarget target = client.target(BASE_URL).path(path);
+			Response apiResponse = null;
+			String result = "";
+			
+			String a = request.getParameter("a");
+			String b = null;
+				
+			switch (phepToan) {
+			case "cong":
+		    case "tru":
+		    case "nhan":
+		    case "chia":
+		        b = request.getParameter("b");
+		        apiResponse = target.path(phepToan).path(a).path(b).request().post(null);
+		        result = apiResponse.readEntity(String.class);
+		        
+		        request.setAttribute("a", a);
+		        request.setAttribute("b", b);
+		        request.setAttribute("ketQua", result);
+		        break;
+			case "luythua":
+				String n = request.getParameter("n");
+				apiResponse = target.path(phepToan).path(a).path(n).request().post(null);
+				result = apiResponse.readEntity(String.class);
+				
+				request.setAttribute("aLT", a);
+				request.setAttribute("nLT", n);
+				request.setAttribute("ketQuaLuyThua", result);
+				break;
+			case "giaithua":
+				apiResponse = target.path(phepToan).path(a).request().post(null);
+				result = apiResponse.readEntity(String.class);
+				
+				request.setAttribute("aGT", a);
+				request.setAttribute("ketQuaGiaiThua", result);
+				break;
+			case "gpt2":
+				b = request.getParameter("b");
+				String c = request.getParameter("c");
+				apiResponse = target.path(phepToan).path(a).path(b).path(c).request().post(null);
+				result = apiResponse.readEntity(String.class);
+				
+				request.setAttribute("aPTB2", a);
+		        request.setAttribute("bPTB2", b);
+		        request.setAttribute("cPTB2", c);
+				request.setAttribute("ketQuaGPT2", result);
+				break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			client.close();
+		}
+		
+		
+		request.getRequestDispatcher("index.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

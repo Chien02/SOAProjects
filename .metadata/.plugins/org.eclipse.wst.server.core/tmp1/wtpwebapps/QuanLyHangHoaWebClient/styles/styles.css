@@ -254,6 +254,8 @@ button:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
     animation: fadeIn 0.3s ease; /* Hiệu ứng trượt hiện ra nhẹ nhàng */
+    max-height: 60vh; /* Giới hạn chiều cao tối đa của form bằng 85% màn hình */
+    overflow-y: auto; /* Kích hoạt thanh cuộn dọc khi nội dung vượt quá chiều cao */
 }
 
 /* Nút X đóng modal */

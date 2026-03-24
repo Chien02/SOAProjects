@@ -16,6 +16,7 @@
 		<a href="userInfo.jsp">Tài khoản</a>
 		<c:if test="${khachHang.laAdmin}">
 			<a href="hanghoa?action=inventory" class="active">Quản lý Kho Hàng</a>
+			<a href="customer?action=danhSach">Quản lý Người Dùng</a>
 		</c:if>
 		<a href="customer?action=dangXuat">Đăng xuất</a>
 	</aside>

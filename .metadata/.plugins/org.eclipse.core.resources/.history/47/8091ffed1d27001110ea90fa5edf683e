@@ -1,0 +1,13 @@
+package taikhoan;
+
+import javax.ws.rs.core.Response;
+
+import customer.KhachHangDTO;
+
+public interface IKhachHang {
+	Response dangNhap(KhachHangDTO dto);
+	Response themKhachHang(KhachHangDTO dto);
+	Response capNhatKhachHang(KhachHangDTO dto);
+	Response layDanhSachKH();
+	Response dangKyVip(String cccd);
+}

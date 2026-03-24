@@ -21,17 +21,11 @@ public class CalcWebClient extends HttpServlet {
 	private final String BASE_URL = "http://localhost:8080/CalcService3/rest/";
 	ClientConfig config = new ClientConfig();
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public CalcWebClient() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Client client = ClientBuilder.newClient(config);
 		
@@ -95,6 +89,7 @@ public class CalcWebClient extends HttpServlet {
 				request.setAttribute("ketQuaGPT2", result);
 				break;
 			}
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -102,7 +97,7 @@ public class CalcWebClient extends HttpServlet {
 		}
 		
 		
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+		
 	}
 
 	/**

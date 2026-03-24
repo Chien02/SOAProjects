@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>QUẢN LÝ NGƯỜI DÙNG</title>
+	<link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+	<h2>HỆ THỐNG QUẢN TRỊ ADMIN</h2>
+	<aside>
+		<a href="customer?action=khoHang">Trang chủ</a>
+		<a href="userInfo.jsp">Tài khoản</a>
+		
+		<c:if test="${khachHang != null && khachHang.laAdmin}">
+			<a href="hanghoa?action=inventory">Quản lý Kho Hàng</a>
+			<a href="customer?action=danhSach" class="active">Quản lý Người Dùng</a> </c:if>
+		
+		<a href="customer?action=dangXuat">Đăng xuất</a>
+	</aside>
+	<main>
+		<div class="section-header">
+            <h2 class="section-title">Danh Sách Người Dùng Hệ Thống</h2>
+            <span class="goods-count">Tổng cộng: ${danhSach.size()} tài khoản</span> 
+        </div>
+
+        <c:if test="${not empty errorMsg}">
+            <div class="msg-alert msg-error">${errorMsg}</div>
+        </c:if>
+
+		<table class="cart-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>CCCD</th>
+                    <th>Họ và Tên</th>
+                    <th>Địa Chỉ</th>
+                    <th style="text-align: center;">Vai Trò</th>
+                    <th style="text-align: center;">Hạng Thành Viên</th>
+                    <th style="text-align: center;">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${danhSach}" var="u" varStatus="loop">
+                    <tr>
+                        <td>${loop.index + 1}</td>
+                        <td>${u.cccd}</td>
+                        <td><strong>${u.hoTen}</strong></td>
+                        <td>${u.diaChi}</td>
+                        <td style="text-align: center;">
+                            <c:choose>
+                                <c:when test="${u.laAdmin}">
+                                    <span style="background-color: #e74c3c; color: white; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: bold;">Admin</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="background-color: #3498db; color: white; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: bold;">Khách Hàng</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td style="text-align: center;">
+                            <c:choose>
+                                <c:when test="${u.vip}">
+                                    <span style="color: #f39c12; font-weight: bold; font-size: 15px;">⭐ VIP</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color: #7f8c8d;">Thường</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                        	<button id="editBtn">Sửa</button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+	</main>
+</body>
+</html>

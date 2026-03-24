@@ -9,5 +9,6 @@ public interface IKhachHang {
 	Response themKhachHang(KhachHangDTO dto);
 	Response capNhatKhachHang(KhachHangDTO dto);
 	Response layDanhSachKH();
-	Response dangKyVip(String cccd);
+	Response dangKyVip(KhachHangDTO dto);
+	Response capNhatVIP(KhachHangDTO dto);
 }

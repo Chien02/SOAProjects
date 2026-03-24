@@ -17,7 +17,8 @@
 		<a href="userInfo.jsp">Tài khoản</a>
 		
 		<c:if test="${khachHang != null && khachHang.laAdmin}">
-			<a href="hanghoa?action=inventory">Kho Hàng</a>
+			<a href="hanghoa?action=inventory">Quản lý Kho Hàng</a>
+			<a href="customer?action=danhSach">Quản lý Người Dùng</a>
 		</c:if>
 		<c:if test="${khachHang != null && !khachHang.laAdmin}">
 			<a href="invoice?action=payment" class="active">Thanh toán</a>
@@ -72,7 +73,7 @@
 					    <c:set var="tongTienThanhToan" value="${tongTienToanDon}" />
 					    
 					    <c:if test="${khachHang.vip}">
-					        <c:set var="tienGiamGia" value="${tongTienToanDon * 0.10}" />
+					        <c:set var="tienGiamGia" value="${tongTienToanDon * (khachHang.tiLeGiam/100)}" />
 					        <c:set var="tongTienThanhToan" value="${tongTienToanDon - tienGiamGia}" />
 					        
 					        <tr>
@@ -84,7 +85,7 @@
 					        
 					        <tr>
 					            <td colspan="4" style="text-align: right; font-size: 16px; color: #27ae60; padding: 10px 20px;">
-					                 Ưu đãi VIP (Giảm 10%):
+					                 Ưu đãi VIP (Giảm ${khachHang.tiLeGiam}%):
 					            </td>
 					            <td style="font-size: 16px; font-weight: bold; color: #27ae60; padding: 10px 20px;">
 					                - <fmt:formatNumber value="${tienGiamGia}" pattern="#,###" /> VNĐ

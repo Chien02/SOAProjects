@@ -16,7 +16,8 @@
 		<a href="userInfo.jsp" class="active">Tài khoản</a>
 		
 		<c:if test="${khachHang != null && khachHang.laAdmin}">
-			<a href="hanghoa?action=khoHang">Kho Hàng</a>
+			<a href="hanghoa?action=khoHang">Quản lý Kho Hàng</a>
+			<a href="customer?action=danhSach">Quản lý Người Dùng</a>
 		</c:if>
 		<c:if test="${khachHang != null && !khachHang.laAdmin}">
 			<a href="invoice?action=payment">Thanh toán</a>
@@ -31,26 +32,32 @@
 			<p>CCCD: ${khachHang.cccd}</p>
 			<p>Tên người dùng: ${khachHang.hoTen}</p>
 			<p>Địa chỉ: ${khachHang.diaChi}</p>
-			<div style="margin-top: 25px; padding: 25px; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); border: 2px solid #f1c40f; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-			    <c:choose>
-			        <c:when test="${khachHang.vip}">
-			            <h3 style="color: #d35400; margin-top: 0; font-size: 22px;">THÀNH VIÊN VIP ĐỘC QUYỀN</h3>
-			            <p style="font-size: 16px;">Ngày gia nhập: <strong><fmt:formatDate value="${khachHang.ngayVip}" pattern="dd/MM/yyyy" /></strong></p>
-			            <p style="color: #27ae60; font-weight: bold;">Đặc quyền: Giảm giá 10% cho toàn bộ đơn hàng trong kho!</p>
-			        </c:when>
-			        <c:otherwise>
-			            <h3 style="color: #7f8c8d; margin-top: 0;"> NÂNG CẤP TÀI KHOẢN VIP</h3>
-			            <p>Trở thành thành viên VIP ngay hôm nay để nhận ưu đãi <strong>giảm giá 10% trọn đời</strong>!</p>
-			            <form action="customer" method="POST" style="display: inline-block;">
-			                <input type="hidden" name="action" value="dangKyVip">
-			                <button type="submit" style="background-color: #f1c40f; color: #2c3e50; font-weight: bold; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-			                    Đăng Ký VIP Ngay Miễn Phí
-			                </button>
-			            </form>
-			        </c:otherwise>
-			    </c:choose>
-			</div>
-			<p>Là Admin: ${khachHang.laAdmin ? 'Có' : 'Không'}</p> </div>
+			
+			<c:if test="${not khachHang.laAdmin}">
+				<div style="margin-top: 25px; padding: 25px; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); border: 2px solid #f1c40f; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+				    <c:choose>
+				        <c:when test="${khachHang.vip}">
+				            <h3 style="color: #d35400; margin-top: 0; font-size: 22px;">THÀNH VIÊN VIP ĐỘC QUYỀN</h3>
+				            <p style="font-size: 16px;">Ngày gia nhập: <strong><fmt:formatDate value="${khachHang.ngayVip}" pattern="dd/MM/yyyy" /></strong></p>
+				            <p style="font-size: 16px;">Ngày hết hạn: <strong><fmt:formatDate value="${khachHang.ngayHetHanVip}" pattern="dd/MM/yyyy" /></strong></p>
+				            <p style="color: #27ae60; font-weight: bold;">Đặc quyền: Giảm giá ${khachHang.tiLeGiam}% cho toàn bộ đơn hàng trong kho!</p>
+				        </c:when>
+				        <c:otherwise>
+				            <h3 style="color: #7f8c8d; margin-top: 0;">🚀 NÂNG CẤP TÀI KHOẢN VIP</h3>
+				            <p>Trở thành thành viên VIP ngay hôm nay để nhận ưu đãi <strong>giảm giá 10% cho tổng hóa đơn (Tỉ lệ có thể thay đổi)</strong>!</p>
+				            <form action="customer" method="POST" style="display: inline-block;">
+				                <input type="hidden" name="action" value="dangKyVip">
+				                <button type="submit" style="background-color: #f1c40f; color: #2c3e50; font-weight: bold; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+				                    Đăng Ký VIP Ngay
+				                </button>
+				            </form>
+				        </c:otherwise>
+				    </c:choose>
+				</div>
+			</c:if>
+			
+			<p>Là Admin: ${khachHang.laAdmin ? 'Có' : 'Không'}</p> 
+		</div>
 		<button id="updateBtn">Chỉnh sửa thông tin</button>
 		
 		<div id="updateModal" class="modal" style="display: none;">
@@ -59,7 +66,6 @@
 				<h3>Cập nhật thông tin</h3>
 				<form action="customer" method="POST">
 					<input type="hidden" name="action" value="capNhat">
-					
 					<label>CCCD: </label>
 					<input type="text" name="cccd" placeholder="Nhập cccd mới" value="${khachHang.cccd}" readonly required>
 					<label>Họ và tên:</label>
