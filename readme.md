@@ -46,71 +46,38 @@ Sơ đồ biểu diễn các đối tượng dữ liệu chính (DTO/Models) đ�
 
 ```mermaid
 classDiagram
+    class KhachHangDTO {
+        -String cccd
+        -String password
+        -String hoTen
+        -String diaChi
+        -boolean laAdmin
+        -boolean vip
+        -Date ngayVip
+        -Date ngayHetHanVip
+        -double tiLeGiam
+    }
+    
+    class ChiTietDTO {
+        -String maSo
+        -String ten
+        -String nsxuat
+        -double donGia
+        -int soLuong
+    }
+    
+    class HoaDon {
+        -String maSo
+        -String maKhachHang
+        -String moTa
+        -Date date
+        -List~ChiTietDTO~ danhSachChiTiet
+        +them(ChiTietDTO)
+        +tinhTongTien()
+    }
 
-&#x20;   class KhachHangDTO {
-
-&#x20;       -String cccd
-
-&#x20;       -String password
-
-&#x20;       -String hoTen
-
-&#x20;       -String diaChi
-
-&#x20;       -boolean laAdmin
-
-&#x20;       -boolean vip
-
-&#x20;       -Date ngayVip
-
-&#x20;       -Date ngayHetHanVip
-
-&#x20;       -double tiLeGiam
-
-&#x20;   }
-
-&#x20;   
-
-&#x20;   class ChiTietDTO {
-
-&#x20;       -String maSo
-
-&#x20;       -String ten
-
-&#x20;       -String nsxuat
-
-&#x20;       -double donGia
-
-&#x20;       -int soLuong
-
-&#x20;   }
-
-&#x20;   
-
-&#x20;   class HoaDon {
-
-&#x20;       -String maSo
-
-&#x20;       -String maKhachHang
-
-&#x20;       -String moTa
-
-&#x20;       -Date date
-
-&#x20;       -List\~ChiTietDTO\~ danhSachChiTiet
-
-&#x20;       +them(ChiTietDTO)
-
-&#x20;       +tinhTongTien()
-
-&#x20;   }
-
-
-
-&#x20;   HoaDon \*-- ChiTietDTO : Bao gom
-
-&#x20;   KhachHangDTO "1" --> "\*" HoaDon : Dat hang
-
+    HoaDon *-- ChiTietDTO : Bao gom
+    KhachHangDTO "1" --> "*" HoaDon : Dat hang
 
 ## 🚀 Các Chức Năng Chính
 
@@ -153,82 +120,44 @@ Hệ thống phân quyền chặt chẽ giữa \*\*Khách Hàng (User)\*\* và \
 \\###Sơ đồ tuần tự
 
 ```mermaid
-
 sequenceDiagram
+    actor User as Khach Hang (Browser)
+    participant Client as Web Client (Servlet)
+    participant API_HH as Inventory API
+    participant API_HD as Invoice API
 
-&#x20;   actor User as Khach Hang (Browser)
+    rect rgb(240, 248, 255)
+    Note over User, API_HD: Giai doan 1: Them san pham vao gio hang
+    User->>Client: POST /invoice?action=themVaoGio
+    activate Client
+    
+    Client->>API_HH: GET /rest/hangHoa/chiTiet?maSo=...
+    activate API_HH
+    API_HH-->>Client: Tra ve thong tin san pham (JSON)
+    deactivate API_HH
+    
+    Client->>Client: Cap nhat ChiTietDTO vao Session (gioHang)
+    Client-->>User: Redirect tai lai trang Kho Hang
+    deactivate Client
+    end
 
-&#x20;   participant Client as Web Client (Servlet)
-
-&#x20;   participant API\_HH as Inventory API
-
-&#x20;   participant API\_HD as Invoice API
-
-
-
-&#x20;   rect rgb(240, 248, 255)
-
-&#x20;   Note over User, API\_HD: Giai doan 1: Them san pham vao gio hang
-
-&#x20;   User->>Client: POST /invoice?action=themVaoGio
-
-&#x20;   activate Client
-
-&#x20;   
-
-&#x20;   Client->>API\_HH: GET /rest/hangHoa/chiTiet?maSo=...
-
-&#x20;   activate API\_HH
-
-&#x20;   API\_HH-->>Client: Tra ve thong tin san pham (JSON)
-
-&#x20;   deactivate API\_HH
-
-&#x20;   
-
-&#x20;   Client->>Client: Cap nhat ChiTietDTO vao Session (gioHang)
-
-&#x20;   Client-->>User: Redirect tai lai trang Kho Hang
-
-&#x20;   deactivate Client
-
-&#x20;   end
-
-
-
-&#x20;   rect rgb(255, 245, 238)
-
-&#x20;   Note over User, API\_HD: Giai doan 2: Tien hanh Chot don \& Thanh toan
-
-&#x20;   User->>Client: POST /invoice?action=thanhToan
-
-&#x20;   activate Client
-
-&#x20;   
-
-&#x20;   Client->>Client: Trich xuat 'gioHang' tu Session
-
-&#x20;   Client->>API\_HD: POST /rest/hoaDon/tao (Payload JSON)
-
-&#x20;   activate API\_HD
-
-&#x20;   
-
-&#x20;   Note right of API\_HD: Xu ly logic luu Data \& Tinh giam gia VIP
-
-&#x20;   API\_HD-->>Client: HTTP 200 OK (Thanh cong)
-
-&#x20;   deactivate API\_HD
-
-&#x20;   
-
-&#x20;   Client->>Client: Xoa Session 'gioHang'
-
-&#x20;   Client-->>User: Hien thi giao dien Thanh Toan Thanh Cong
-
-&#x20;   deactivate Client
-
-&#x20;   end
+    rect rgb(255, 245, 238)
+    Note over User, API_HD: Giai doan 2: Tien hanh Chot don & Thanh toan
+    User->>Client: POST /invoice?action=thanhToan
+    activate Client
+    
+    Client->>Client: Trich xuat 'gioHang' tu Session
+    Client->>API_HD: POST /rest/hoaDon/tao (Payload JSON)
+    activate API_HD
+    
+    Note right of API_HD: Xu ly logic luu Data & Tinh giam gia VIP
+    API_HD-->>Client: HTTP 200 OK (Thanh cong)
+    deactivate API_HD
+    
+    Client->>Client: Xoa Session 'gioHang'
+    Client-->>User: Hien thi giao dien Thanh Toan Thanh Cong
+    deactivate Client
+    end
 
 
 ## 🛠️ Công Nghệ Sử Dụng
