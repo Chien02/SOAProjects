@@ -78,7 +78,7 @@ classDiagram
 
     HoaDon *-- ChiTietDTO : Bao gom
     KhachHangDTO "1" --> "*" HoaDon : Dat hang
-
+```
 ## 🚀 Các Chức Năng Chính
 
 Hệ thống phân quyền chặt chẽ giữa \*\*Khách Hàng (User)\*\* và \*\*Quản Trị Viên (Admin)\*\*:
@@ -158,7 +158,7 @@ sequenceDiagram
     Client-->>User: Hien thi giao dien Thanh Toan Thanh Cong
     deactivate Client
     end
-
+```
 
 ## 🛠️ Công Nghệ Sử Dụng
 
